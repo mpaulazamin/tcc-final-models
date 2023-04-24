@@ -5,6 +5,7 @@ from scipy.integrate import solve_ivp
 
 def controle_pid(SP, PV, j, I_buffer, D_buffer, dt, Kp, Ti, Td, b, c, N, UU_bias, UU_min, UU_max, metodo="backward"):
     """Calcula a saída do controlador PID e seus parâmetros.
+
     Argumentos:
         SP (float): Setpoint da variável.
         PV (float): Valor da variável medida.
@@ -23,6 +24,7 @@ def controle_pid(SP, PV, j, I_buffer, D_buffer, dt, Kp, Ti, Td, b, c, N, UU_bias
         UU_min (float): Valor mínimo que a variável pode atingir.
         UU_max (float): Valor máximo que a variável pode atingir.
         metodo (string): Método para resolver o controlador PID. As opções são: Backward, Forward, Tustin e Ramp.
+
     Retorna:
         numpy.array(): Array do numpy contendo o valor de saída do PID e os parâmetros calculados.
     """
@@ -77,13 +79,14 @@ def controle_pid(SP, PV, j, I_buffer, D_buffer, dt, Kp, Ti, Td, b, c, N, UU_bias
     return np.array([Uop, I, D])
 
 
-def controle_boiler_on_off(Uop, medido, minimo, maximo):
+def controle_boiler_on_off(Uop, medido, minimo, maximo, xq=0.2):
     """Controle liga e desliga do boiler.
     Argumentos:
         Uop (int): Variável de controle do seletor do boiler (Sa).
         medido (float): Valor medido para a temperatura do boiler (Tq).
         minimo (float): Valor mínimo para a temperatura do boiler.
         maximo (float): Valor máximo para a temperatura do boiler.
+        xq (float): Abertura da válvula de corrente quente.
     
     Retorna:
         Uop (int): Variável de controle do seletor do boiler (Sa).
@@ -93,14 +96,20 @@ def controle_boiler_on_off(Uop, medido, minimo, maximo):
     elif medido > maximo:
         Uop = 0
 
+    # Desliga o sistema de aquecimento se não estiver passando água
+    if xq < 0.15:
+        Uop = 0
+
     return Uop
 
 
 def modelo_alimentacao_quente(xf, xq):
     """Modelo para a vazão válvula de alimentação da corrente quente (Fq).
+
     Argumentos:
         xf (float): Abertura da válvula de corrente fria.
         xq (float): Abertura da válvula de corrente quente.
+
     Retorna:
         Fq (float): Vazão da válvula da corrente quente.
     """
@@ -114,9 +123,11 @@ def modelo_alimentacao_quente(xf, xq):
 
 def modelo_alimentacao_fria(xf, Fq):
     """Modelo para a vazão da válvula de alimentação da corrente fria (Ff).
+
     Argumentos:
         xf (float): Abertura da válvula de corrente fria.
         Fq (float): Vazão da válvula da corrente quente.
+
     Retorna:
         Ff (float): Abertura da válvula da corrente fria.
     """
@@ -129,8 +140,10 @@ def modelo_alimentacao_fria(xf, Fq):
 
 def modelo_valvula_saida(xs):
     """Modelo para a vazão válvula de saída (Fs).
+
     Argumentos:
         xs (float): Abertura da válvula de saída.
+
     Retorna:
         Fs (float): Vazão da válvula de saída.
     """
@@ -143,12 +156,14 @@ def modelo_valvula_saida(xs):
 
 def modelo_temperatura_boiler(t, Tq, Fq, Tf, Sa):
     """Modelo para a temperatura de aquecimento do boiler (Tq).
+
     Argumentos:
         t (float): Tempo para ser utilizado na solução da equação diferencial ordinária pelo integrador do scipy.
         Tq (float): Temperatura de aquecimento do boiler.
         Fq (float): Vazão da válvula do boiler.
         Tf (float): Temperatura da corrente fria.
         Sa (float): Seletor do aquecimento do boiler. 
+
     Retorna:
         Equação diferencial para o modelo do boiler.
     """   
@@ -157,12 +172,14 @@ def modelo_temperatura_boiler(t, Tq, Fq, Tf, Sa):
 
 def modelo_nivel_tanque(t, h, Ff, Fq, Fd, Fs):
     """Modelo para o nível do tanque (h).
+
     Argumentos:
         t (float): Tempo para ser utilizado na solução da equação diferencial ordinária pelo integrador do scipy.
         h (float): nível do tanque de aquecimento da mistura entre corrente quente e fria.
         Fq (float): Vazão da válvula da corrente quente.
         Fd (float): Vazão da válvula do distúrbio no tanque.
         Fs (float): Vazão da válvula de saída.
+
     Retorna:
         Equação diferencial para o modelo do nível do tanque.
     """       
@@ -171,6 +188,7 @@ def modelo_nivel_tanque(t, h, Ff, Fq, Fd, Fs):
 
 def modelo_temperatura_tanque(t, Tt, Ff, Tf, Fq, Tq, Fd, Td, Sr, h):
     """Modelo para a temperatura de saída do tanque de aquecimento (Tt).
+
     Argumentos:
         t (float): Tempo para ser utilizado na solução da equação diferencial ordinária pelo integrador do scipy.
         Tt (float): Temperatura de saída do tanque de aquecimento da mistura entre corrente quente e fria.
@@ -182,6 +200,7 @@ def modelo_temperatura_tanque(t, Tt, Ff, Tf, Fq, Tq, Fd, Td, Sr, h):
         Td (float): Temperatura da corrente de distúrbio.
         Sr (float): Seletor da resistência elétrica do tanque de aquecimento.
         h (float): nível do tanque de aquecimento da mistura entre corrente quente e fria.
+
     Retorna:
         Equação diferencial para o modelo da temperatura de saída do tanque.
     """      
@@ -190,11 +209,13 @@ def modelo_temperatura_tanque(t, Tt, Ff, Tf, Fq, Tq, Fd, Td, Sr, h):
 
 def modelo_temperatura_saida(t, Ts, Tt, Fs, Tinf):
     """Modelo para a temperatura de saída do chuveiro (Ts).
+
     Argumentos:
         t (float): Tempo para ser utilizado na solução da equação diferencial ordinária pelo integrador do scipy.
         Ts (float): Temperatura de saída do chuveiro.
         Fs (float): Vazão da válvula de saída.
         Tinf (float): Temperatura ambiente.
+
     Retorna:
         Equação diferencial para o modelo da temperatura de saída do chuveiro.
     """      
@@ -203,6 +224,7 @@ def modelo_temperatura_saida(t, Ts, Tt, Fs, Tinf):
 
 def modelagem_sistema(t, Y, Sa, xf, xq, xs, Tf, Td, Tinf, Fd, Sr):
     """Reúne as equaçõs diferenciais para a modelagem do sistema com tempo morto.
+
     Argumentos:
         t (float): Tempo para ser utilizado na solução da equação diferencial ordinária pelo integrador do scipy.
         Y (numpy.array): Condições iniciais para nível do tanque de aquecimento (h), temperatura do boiler (Tq),
@@ -216,6 +238,7 @@ def modelagem_sistema(t, Y, Sa, xf, xq, xs, Tf, Td, Tinf, Fd, Sr):
         Tinf (float): Temperatura ambiente.
         Fd (float): Vazão da válvula do distúrbio no tanque.
         Sr (float): Seletor da resistência elétrica do tanque de aquecimento.
+
     Retorna:
         numpy.array(): Equações diferenciais ordinárias para serem resolvidas pelo integrador do scipy.
     """
@@ -242,6 +265,7 @@ def modelagem_sistema(t, Y, Sa, xf, xq, xs, Tf, Td, Tinf, Fd, Sr):
 def simulacao_malha_temperatura(SYS, Y0, UT, dt, I_buffer, D_buffer, Tinf, split_range): 
     """Modelagem do sistema com malha de inventário para nível do tanque, controle liga-desliga (on-off)
     para a temperatura do boiler (Tq) e malha cascata para temperatura de saída com split-range em Sr.
+
     Argumentos:
         SYS: Função contendo as equações diferenciais para a solução do problema.
         Y0 (numpy.array): Array contendo as condições inciais para nível do tanque de aquecimento (h), 
@@ -307,10 +331,10 @@ def simulacao_malha_temperatura(SYS, Y0, UT, dt, I_buffer, D_buffer, Tinf, split
         
         # Controle liga e desliga do boiler: malha 0
         SP[k, 0] = UU[k, 0]
-        UU[k, 0] = controle_boiler_on_off(UU[k-1, 0], YY[k, 0], SP[k, 0] - 1, SP[k, 0] + 1)
+        UU[k, 0] = controle_boiler_on_off(UU[k-1, 0], YY[k, 0], SP[k, 0] - 1, SP[k, 0] + 1, xq=UU[k, 2])
         
         # Malhas de controle PIDs:
-        for jj in [1, 2]:
+        for jj in [1]:
 
             # Malha cascata:
             if jj == 2:
@@ -356,6 +380,7 @@ def calculo_iqb(Ts, Fs):
     Argumentos:
         Ts (float): Temperatura de saída do chuveiro.
         Fs (float): Vazão da válvula de saída.
+
     Retorna:
         iqb (float): Índice de qualidade do banho.
     """
@@ -369,41 +394,36 @@ def calculo_iqb(Ts, Fs):
     return iqb
 
 
-def custo_eletrico_banho(Sr, potencia_eletrica, custo_eletrico_kwh, dt):
+def custo_eletrico_banho(Sr, potencia_eletrica, custo_eletrico_kwh, tempo):
     """Calcula o custo da parte elétrica do banho.
+
     O custo da parte elétrica do banho é dado pela potência do chuveiro em KW multiplicado pela fração de utilização
     da resistência elétrica Sr, o custo do kWh em reais, e o tempo do banho em horas. Como o tempo é em minutos, 
-    divide-se por 60. Como a estratégia de controle utilizada foi split-range para Sr, o valor considerado no cálculo
-    para Sr será a área da curva (integral).
+    divide-se por 60. Como Sr é uma ação, seu valor é constante para toda a iteração.
+
     Argumentos:
         Sr (float): Seletor da resistência elétrica do tanque de aquecimento.
         potencial_eletrica (float): Potência elétrica do tanque de aquecimento (chuveiro) em kW.
         custo_eletrico_kwh (float): Custo do kWh da energia em reais por hora.
-        dt (float): Passo de tempo.
+        tempo (float): Tempo da ação em minutos.
+
     Retorna:
         custo_eletrico_total (float): Custo da energia elétrica do banho em reais.
     """
-    Sr_utilizado = np.trapz(y=Sr, dx=dt)
-    custo_eletrico_total = potencia_eletrica * Sr_utilizado * custo_eletrico_kwh / 60
+    custo_eletrico_total = potencia_eletrica * Sr * custo_eletrico_kwh * tempo / 60
 
     return custo_eletrico_total
 
 
 def custo_gas_banho(Sa, potencia_aquecedor, custo_gas_kg, dt):
     """Calcula o custo do gás do banho.
-    Para calcular o custo do gás do banho, primeiro é necessário achar por quanto tempo o aquecedor a gás ficou ligado.
-    Como o passo de tempo dt é de 0.01, em 1 minuto, o valor de Sa pode ser alterado para 0 ou 1 em até 100 vezes.
-    Assim, conta-se o número de vezes que Sa é 1, e a seguinte regra de três é feita:
-        1 minuto de banho com Sa ligado - 100 vezes
-        x minuto de banho com Sa ligado - núnero de vezes que Sa é 1
+
     A potência de um aquecedor a gás é dada em kcal/h. Considerando um rendimento de 86%, a potência últi será
     a potência multiplicada pelo rendimento. Para saber quantas kcal são fornecidas durante o banho, multiplica-se
-    a potência útil pelo tempo em que Sa foi ligado para 1 (como é em horas, divide-se o tempo por 60 minutos).
+    a potência útil pela quantidade de energia gasta de Sa (área da curva) e divide por 60 para tempo em horas.
     O pode calorífico do gás GLP é de 11750 kcal/kg. Se multiplicarmos esse valor pela quantidade de kcal gasta no banho,
     é possível obter a quantidade de gás em kg gasta no banho. Finalmente, o custo em reais é dado pela quantidade de gás em kg
     multiplicada pelo custo do gás em kg/reais.
-    OU é possível calcular a área da curva de Sa (integral), para achar a quantidade de Sa utilizado durante o banho, e depois 
-    seguir a mesma lógica para os cálculos de potência e kcal fornecida no banho.
     
     Referências: 
         https://conteudos.rinnai.com.br/vazao-aquecedor-de-agua-a-gas/#:~:text=A%20pot%C3%AAncia%20do%20aquecedor%20%C3%A9,hora%20(kcal%2Fh)
@@ -413,7 +433,9 @@ def custo_gas_banho(Sa, potencia_aquecedor, custo_gas_kg, dt):
         Sa (float): Seletor do aquecimento do boiler.
         potencial_aquecedor (float): Potência do aquecedor (boiler) em kcal/h.
         custo_gas_kg (float): Custo do kg do gás em reais por kg.
-        dt (float): Passo de tempo.
+        tempo (float): Tempo da ação em minutos.
+        df (float): Passo de tempo da simulação.
+
     Retorna:
         custo_gas_total (float): Custo do gás do banho em reais.
     """
@@ -446,13 +468,16 @@ def custo_gas_banho(Sa, potencia_aquecedor, custo_gas_kg, dt):
 
 def custo_agua_banho(Fs, custo_agua_m3, tempo):
     """Calcula o custo de água do banho.
+
     A quantidade de litros gasta em um banho é dada pela vazão em L/min multiplicada pelo tempo em minutos do banho.
     Depois, divide-se a quantidade de litros por 1000, para obter a quantidade em m3 gasta durante o banho.
     Multiplicando esse valor pelo custo da água em m3/reais, obtém-se o custo em reais da água gasta durante o banho.
+
     Argumentos:
         xs (float): Vazão da válvula de saída.
         custo_agua_m3 (float): Custo da água em m3 por reais. 
         tempo (float): Tempo da ação em minutos.
+
     Retorna:
         custo_agua_total: Custo da água do banho em reais.
     """
