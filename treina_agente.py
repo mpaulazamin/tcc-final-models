@@ -304,7 +304,7 @@ class ShowerEnv(gym.Env):
 def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 
     # Define o local para salvar o modelo treinado e os checkpoints:
-    path_root_models = "/models/"
+    path_root_models = "/models_sac_v2/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -358,7 +358,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 def avalia_agente(nome_algoritmo, Tinf):
 
     # Define o local do checkpoint salvo:
-    path_root_models = "/models/"
+    path_root_models = "/models_sac_v2/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
