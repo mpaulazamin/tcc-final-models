@@ -3,16 +3,15 @@ import ray.rllib.algorithms.ppo as ppo
 import ray.rllib.algorithms.sac as sac
 from ray.rllib.algorithms.algorithm import Algorithm
 
+import random
+import os
+import glob
 import gymnasium as gym
 import numpy as np
-import random
 import pandas as pd
-import os
-import shutil
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pprint
-import glob
+from itertools import accumulate
 
 from controle_temperatura_saida import simulacao_malha_temperatura
 from controle_temperatura_saida import modelagem_sistema
@@ -43,7 +42,7 @@ class ShowerEnv(gym.Env):
         self.tempo_iteracao = 2
 
         # Distúrbios e temperatura ambiente - Fd, Td, Tf, Tinf:
-        self.Fd = self.Tinf
+        self.Fd = 0
         self.Td = self.Tinf
         self.Tf = self.Tinf
 
@@ -440,6 +439,11 @@ def avalia_agente(nome_algoritmo, Tinf):
         print(f"Recompensa total: {episode_reward}")
         print("")
 
+    # Custos cumulativos:
+    custo_eletrico_list_acumulado = list(accumulate(custo_eletrico_list))
+    custo_gas_list_acumulado = list(accumulate(custo_gas_list))
+    custo_agua_list_acumulado = list(accumulate(custo_agua_list))
+
     # Para visualização:
     SPTq = np.concatenate(SPTq_list, axis=0)
     Tq = np.concatenate(Tq_list, axis=0)
@@ -460,72 +464,80 @@ def avalia_agente(nome_algoritmo, Tinf):
 
     # Gráficos:
     sns.set_style("darkgrid")
-    fig, ax = plt.subplots(3, 3, figsize=(20, 17))
+    path_imagens = os.getcwd() + "/imagens/"
 
-    ax[0, 0].plot(tempo_total, Ts, label="Ts", color="royalblue", linestyle="solid")
-    ax[0, 0].plot(tempo_total, Tt, label="Tt", color="deepskyblue", linestyle="solid")
-    # ax[0, 0].set_title("Temperaturas de saída (Ts) e do tanque (Tt)")
-    ax[0, 0].set_xlabel("Tempo")
-    ax[0, 0].set_ylabel("Temperatura")
+    fig, ax = plt.subplots(2, 2, figsize=(20, 17))
+    ax[0, 0].plot(tempo_total, Ts, label="Temperatura de saída (Ts)", color="royalblue", linestyle="solid")
+    ax[0, 0].plot(tempo_total, Tt, label="Temperatura do tanque (Tt)", color="deepskyblue", linestyle="solid")
+    ax[0, 0].set_title("Temperaturas de saída (Ts) e do tanque (Tt)")
+    ax[0, 0].set_xlabel("Tempo em minutos")
+    ax[0, 0].set_ylabel("Temperatura em °C")
     ax[0, 0].legend()
 
-    ax[0, 1].plot(tempo_total, SPTq, label="SPTq", color="purple", linestyle="dashed")
-    ax[0, 1].plot(tempo_total, Tq, label="Tq", color="mediumorchid", linestyle="solid")
-    # ax[0, 1].set_title("Temperatura do boiler (Tq)")
-    ax[0, 1].set_xlabel("Tempo")
-    ax[0, 1].set_ylabel("Temperatura")
+    ax[0, 1].plot(tempo_total, SPTq, label="Ação - setpoint da temperatura do boiler (SPTq)", color="purple", linestyle="dashed")
+    ax[0, 1].plot(tempo_total, Tq, label="Temperatura do boiler (Tq)", color="mediumorchid", linestyle="solid")
+    ax[0, 1].set_title("Temperatura do boiler (Tq)")
+    ax[0, 1].set_xlabel("Tempo em minutos")
+    ax[0, 1].set_ylabel("Temperatura °C")
     ax[0, 1].legend()
 
-    ax[0, 2].plot(tempo_acoes, iqb_list, label="IQB", color="black", linestyle="solid")
-    # ax[0, 2].set_title("Qualidade do banho (IQB)")
-    ax[0, 2].set_xlabel("Ações")
-    ax[0, 2].set_ylabel("Índice final")
-    ax[0, 2].legend()
-
-    ax[1, 0].plot(tempo_total, SPh, label="SPh", color="darkslategray", linestyle="dashed")
-    ax[1, 0].plot(tempo_total, h, label="h", color="teal", linestyle="solid")
-    # ax[1, 0].set_title("Nível do tanque (h)")
-    ax[1, 0].set_xlabel("Tempo")
-    ax[1, 0].set_ylabel("Nível")
+    ax[1, 0].plot(tempo_total, xq, label="Abertura da válvula quente (xq)", color="darkmagenta", linestyle="solid")
+    ax[1, 0].plot(tempo_total, xf, label="Abertura da válvula fria (xf)", color="deeppink", linestyle="solid")
+    ax[1, 0].plot(tempo_total, xs, label="Ação - abertura da válvula de saída (xs)", color="palevioletred", linestyle="solid")
+    ax[1, 0].set_title("Aberturas das válvulas quente (xq), fria (xf) e de saída (xs)")
+    ax[1, 0].set_xlabel("Tempo em minutos")
+    ax[1, 0].set_ylabel("Abertura")
     ax[1, 0].legend()
 
-    ax[1, 1].plot(tempo_total, xq, label="xq", color="darkmagenta", linestyle="solid")
-    ax[1, 1].plot(tempo_total, xf, label="xf", color="deeppink", linestyle="solid")
-    ax[1, 1].plot(tempo_total, xs, label="xs", color="palevioletred", linestyle="solid")
-    # ax[1, 1].set_title("Aberturas das válvulas quente (xq), fria (xf) e de saída (xs)")
-    ax[1, 1].set_xlabel("Tempo")
-    ax[1, 1].set_ylabel("Abertura")
+    ax[1, 1].plot(tempo_total, Sa, label="Fração de aquecimento do boiler (Sa)", color="skyblue", linestyle="solid")
+    ax[1, 1].plot(tempo_total, Sr, label="Ação - fração da resistência elétrica (Sr)", color="darkcyan", linestyle="solid")
+    ax[1, 1].set_title("Frações da resistência elétrica (Sr) e do aquecimento do boiler (Sa)")
+    ax[1, 1].set_xlabel("Tempo em minutos")
+    ax[1, 1].set_ylabel("Fração")
     ax[1, 1].legend()
+    plt.savefig(path_imagens + "resultado1_" + nome_algoritmo + ".png", dpi=200)
+    plt.show()
 
-    ax[1, 2].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="black", linestyle="solid")
-    ax[1, 2].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="gray", linestyle="solid")
-    ax[1, 2].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="dodgerblue", linestyle="solid")
-    # ax[1, 2].set_title("Custos do banho")
-    ax[1, 2].set_xlabel("Ações")
-    ax[1, 2].set_ylabel("Custos")
-    ax[1, 2].legend()
+    fig, ax = plt.subplots(1, 2, figsize=(15, 5))
+    ax[0].plot(tempo_total, SPh, label="Setpoint do nível do tanque (SPh)", color="darkslategray", linestyle="dashed")
+    ax[0].plot(tempo_total, h, label="Nível do tanque (h)", color="teal", linestyle="solid")
+    ax[0].set_title("Nível do tanque (h)")
+    ax[0].set_xlabel("Tempo em minutos")
+    ax[0].set_ylabel("Nível")
+    ax[0].legend()
 
-    ax[2, 0].plot(tempo_total, Sa, label="Sa", color="skyblue", linestyle="solid")
-    ax[2, 0].plot(tempo_total, Sr, label="Sr", color="darkcyan", linestyle="solid")
-    # ax[2, 0].set_title("Frações da resistência elétrica (Sr) e do aquecimento do boiler (Sa)")
-    ax[2, 0].set_xlabel("Tempo")
-    ax[2, 0].set_ylabel("Fração")
-    ax[2, 0].legend()
+    ax[1].plot(tempo_total, Fs, label="Vazão de saída (Fs)", color="slateblue", linestyle="solid")
+    ax[1].plot(tempo_total, Fd, label="Vazão da corrente de distúrbio (Fd)", color="darkorchid", linestyle="solid")
+    ax[1].set_title("Vazões de saída (Fs) e de distúrbio (Fd)")
+    ax[1].set_xlabel("Tempo em minutos")
+    ax[1].set_ylabel("Vazão em litros/minutos")
+    ax[1].legend()
+    plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + ".png", dpi=200)
+    plt.show()
 
-    ax[2, 1].plot(tempo_total, Fs, label="Fs", color="slateblue", linestyle="solid")
-    ax[2, 1].plot(tempo_total, Fd, label="Fd", color="darkorchid", linestyle="solid")
-    # ax[2, 1].set_title("Vazões de saída (Fs) e de distúrbio (Fd)")
-    ax[2, 1].set_xlabel("Tempo")
-    ax[2, 1].set_ylabel("Vazão")
-    ax[2, 1].legend()
+    fig, ax = plt.subplots(1, 3, figsize=(20, 5))
+    ax[0].plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
+    ax[0].set_title("Índice de qualidade do banho (IQB)")
+    ax[0].set_xlabel("Ação")
+    ax[0].set_ylabel("Índice")
+    ax[0].legend()
 
-    ax[2, 2].plot(tempo_total, Tinf, label="Tinf", color="steelblue", linestyle="solid")
-    ax[2, 2].plot(tempo_total, Tf, label="Tf", color="slategray", linestyle="solid")
-    ax[2, 2].plot(tempo_total, Td, label="Td", color="black", linestyle="solid")
-    # ax[2, 2].set_title("Temperaturas ambiente (Tinf), da corrente fria (Tf) e de distúrbio (Td)")
-    ax[2, 2].set_xlabel("Tempo")
-    ax[2, 2].set_ylabel("Temperatura")
-    ax[2, 2].legend()
+    ax[1].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="black", linestyle="solid")
+    ax[1].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="gray", linestyle="solid")
+    ax[1].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="dodgerblue", linestyle="solid")
+    ax[1].set_title("Custos do banho em cada ação")
+    ax[1].set_xlabel("Ação")
+    ax[1].set_ylabel("Custos em reais")
+    ax[1].legend()
+
+    ax[2].plot(tempo_acoes, custo_eletrico_list_acumulado, label="Custo elétrico", color="black", linestyle="solid")
+    ax[2].plot(tempo_acoes, custo_gas_list_acumulado, label="Custo do gás", color="gray", linestyle="solid")
+    ax[2].plot(tempo_acoes, custo_agua_list_acumulado, label="Custo da água", color="dodgerblue", linestyle="solid")
+    ax[2].set_title("Custos cumulativos do banho")
+    ax[2].set_xlabel("Ação")
+    ax[2].set_ylabel("Custos em reais")
+    ax[2].legend()
+    plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
     plt.show()
 
 
@@ -534,10 +546,10 @@ ray.shutdown()
 ray.init()
 
 # Define variáveis:
-# nome_algoritmo = "proximal_policy_optimization"
-nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 2
-n_iter_checkpoints = 1
+nome_algoritmo = "proximal_policy_optimization"
+# nome_algoritmo = "soft_actor_critic"
+n_iter_agente = 101
+n_iter_checkpoints = 10
 Tinf = 25
 
 # Treina e avalia o agente:
