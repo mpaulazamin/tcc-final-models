@@ -496,7 +496,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     ax[1, 1].set_ylabel("Fração")
     ax[1, 1].legend()
     plt.savefig(path_imagens + "resultado1_" + nome_algoritmo + ".png", dpi=200)
-    plt.show()
+    # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
     ax[0].plot(tempo_total, SPh, label="Setpoint do nível do tanque (SPh)", color="darkslategray", linestyle="dashed")
@@ -513,7 +513,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     ax[1].set_ylabel("Vazão em litros/minutos")
     ax[1].legend()
     plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + ".png", dpi=200)
-    plt.show()
+    # plt.show()
 
     fig, ax = plt.subplots(1, 3, figsize=(20, 5))
     ax[0].plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
@@ -538,7 +538,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     ax[2].set_ylabel("Custos em reais")
     ax[2].legend()
     plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
-    plt.show()
+    # plt.show()
 
 
 # Inicializa o Ray:
@@ -552,8 +552,8 @@ ray.init()
 # Tinf = 25
 
 nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 1000
-n_iter_checkpoints = 100
+n_iter_agente = 5001
+n_iter_checkpoints = 500
 Tinf = 25
 
 # Treina e avalia o agente:
