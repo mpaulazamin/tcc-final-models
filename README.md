@@ -1,4 +1,4 @@
-## Single concept - RL como ferramenta de camada supervisória
+## Single concept - RL como ferramenta da camada RTO
 
 Modelo com malha de inventário para o nível do tanque e com controle liga-desliga do boiler. Com malha cascata, sem split-range.
 
