@@ -1,12 +1,12 @@
 ## Single concept - RL como ferramenta de camada supervisória
 
-Modelo com malha de inventário para o nível do tanque e com controle liga-desliga do boiler. Sem malha cascata, sem split-range.
+Modelo com malha de inventário para o nível do tanque e com controle liga-desliga do boiler. Com malha cascata, sem split-range.
 
 ![chuveiro](https://github.com/mpaulazamin/tcc-models-rllib/blob/agent_ppo_v1/imagens/chuveiro_controle_h.jpg)
 
 ### Espaço de ações
 
-- xq: 0.01 a 0.99 - contínuo
+- SPTs: 30 a 40 - contínuo
 - SPTq: 30 a 70 - contínuo
 - xs: 0.01 a 0.99 - contínuo
 - Sr: 0 a 1 - contínuo

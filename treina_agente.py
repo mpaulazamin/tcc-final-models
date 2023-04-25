@@ -60,11 +60,11 @@ class ShowerEnv(gym.Env):
         self.custo_gas_kg = 3
         self.custo_agua_m3 = 4
 
-        # Ações - xq, SPTq, xs, Sr:
+        # Ações - SPTs, SPTq, xs, Sr:
         if self.nome_algoritmo == "proximal_policy_optimization":
             self.action_space = gym.spaces.Tuple(
                 (
-                    gym.spaces.Box(low=0.01, high=0.99, shape=(1,), dtype=np.float32),
+                    gym.spaces.Box(low=30, high=40, shape=(1,), dtype=np.float32),
                     gym.spaces.Box(low=30, high=70, shape=(1,), dtype=np.float32),
                     gym.spaces.Box(low=0.01, high=0.99, shape=(1,), dtype=np.float32),
                     gym.spaces.Box(low=0, high=1, shape=(1,), dtype=np.float32),
@@ -74,15 +74,15 @@ class ShowerEnv(gym.Env):
         # SAC não funciona com Tuple space:
         if self.nome_algoritmo == "soft_actor_critic":
             self.action_space = gym.spaces.Box(
-                low=np.array([0.01, 30, 0.01, 0]), 
-                high=np.array([0.99, 70, 0.99, 1]), 
+                low=np.array([30, 30, 0.01, 0]), 
+                high=np.array([40, 70, 0.99, 1]), 
                 dtype=np.float32
             )
 
-        # Estados - Ts, Tq, Tt, h, Fs, xf, iqb, Tinf:
+        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
         self.observation_space = gym.spaces.Box(
-            low=np.array([0, 0, 0, 0, 0, 0, 0, 10]),
-            high=np.array([100, 100, 100, 10000, 100, 1, 1, 35]),
+            low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10]),
+            high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35]),
             dtype=np.float32, 
         )
 
@@ -143,20 +143,22 @@ class ShowerEnv(gym.Env):
         self.I_buffer = self.Kp * self.Y0[id] * (1 - self.b)
         self.D_buffer = np.array([0, 0, 0, 0])  
 
-        # Estados - Ts, Tq, Tt, h, Fs, xf, iqb, Tinf:
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.iqb, self.Tinf],
+        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
                              dtype=np.float32)
         
         return self.obs
 
     def step(self, action):
 
+        print(action)
+
         # Tempo de cada iteração:
         self.tempo_final = self.tempo_inicial + self.tempo_iteracao
 
         if self.nome_algoritmo == "proximal_policy_optimization":
-            # Abertura da válvula quente:
-            self.xq = round(action[0][0], 2)
+            # Setpoint da temperatura de saída:
+            self.SPTs = round(action[0][0], 2)
 
             # Fração de aquecimento do boiler:
             self.SPTq = round(action[1][0], 1)
@@ -168,8 +170,8 @@ class ShowerEnv(gym.Env):
             self.Sr = round(action[3][0], 2)
 
         if self.nome_algoritmo == "soft_actor_critic":
-            # Abertura da válvula quente:
-            self.xq = round(action[0], 2)
+            # Setpoint da temperatura de saída:
+            self.SPTs = round(action[0], 2)
 
             # Fração de aquecimento do boiler:
             self.SPTq = round(action[1], 1)
@@ -183,8 +185,8 @@ class ShowerEnv(gym.Env):
         # Variáveis para simulação - tempo, SPTq, SPh, xq, xs, Tf, Td, Tinf, Fd, Sr:
         self.UT = np.array(
             [   
-                [self.tempo_inicial, self.SPTq, self.SPh, self.xq, self.xs, self.Tf, self.Td, self.Tinf, self.Fd, self.Sr],
-                [self.tempo_final, self.SPTq, self.SPh, self.xq, self.xs, self.Tf, self.Td, self.Tinf, self.Fd, self.Sr]
+                [self.tempo_inicial, self.SPTq, self.SPh, self.SPTs, self.xs, self.Tf, self.Td, self.Tinf, self.Fd, self.Sr],
+                [self.tempo_final, self.SPTq, self.SPh, self.SPTs, self.xs, self.Tf, self.Td, self.Tinf, self.Fd, self.Sr]
             ]
         )
 
@@ -243,7 +245,7 @@ class ShowerEnv(gym.Env):
         self.custo_agua = custo_agua_banho(self.Fs, self.custo_agua_m3, self.tempo_iteracao)
 
         # Estados - Ts, Tq, Tt, h, Fs, xf, iqb, Tinf:
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.iqb, self.Tinf],
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
                              dtype=np.float32)
 
         # Define a recompensa:
@@ -263,6 +265,7 @@ class ShowerEnv(gym.Env):
         self.SPh_total = np.repeat(self.SPh, 201)
         self.h_total = self.YY[:,1]
         self.Tt_total = self.YY[:,2]
+        self.SPTs_total = np.repeat(self.SPTs, 201)
         self.Ts_total = self.YY[:,3]
         self.xq_total = self.UU[:,2]
         self.xf_total = self.UU[:,1]
@@ -279,6 +282,7 @@ class ShowerEnv(gym.Env):
                 "SPh": self.SPh_total,
                 "h": self.h_total,
                 "Tt": self.Tt_total,
+                "SPTs": self.SPTs_total,
                 "Ts": self.Ts_total,
                 "Sr": self.Sr_total,
                 "Sa": self.Sa_total,
@@ -375,6 +379,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     SPh_list = []
     h_list = []
     Tt_list = []
+    SPTs_list = []
     Ts_list = []
     Sr_list = []
     Sa_list = []
@@ -420,6 +425,7 @@ def avalia_agente(nome_algoritmo, Tinf):
             SPh_list.append(info.get("SPh"))
             h_list.append(info.get("h"))
             Tt_list.append(info.get("Tt"))
+            SPTs_list.append(info.get("SPTs"))
             Ts_list.append(info.get("Ts"))
             Sr_list.append(info.get("Sr"))
             Sa_list.append(info.get("Sa"))
@@ -450,6 +456,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     SPh = np.concatenate(SPh_list, axis=0)
     h = np.concatenate(h_list, axis=0)
     Tt = np.concatenate(Tt_list, axis=0)
+    SPTs = np.concatenate(SPTs_list, axis=0)
     Ts = np.concatenate(Ts_list, axis=0)
     Sr = np.concatenate(Sr_list, axis=0)
     Sa = np.concatenate(Sa_list, axis=0)
@@ -467,6 +474,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     path_imagens = os.getcwd() + "/imagens/"
 
     fig, ax = plt.subplots(2, 2, figsize=(20, 17))
+    ax[0, 0].plot(tempo_total, SPTs, label="Ação - setpoint da temperatura de saída (SPTs)", color="navy", linestyle="dashed")
     ax[0, 0].plot(tempo_total, Ts, label="Temperatura de saída (Ts)", color="royalblue", linestyle="solid")
     ax[0, 0].plot(tempo_total, Tt, label="Temperatura do tanque (Tt)", color="deepskyblue", linestyle="solid")
     ax[0, 0].set_title("Temperaturas de saída (Ts) e do tanque (Tt)")
@@ -546,10 +554,10 @@ ray.shutdown()
 ray.init()
 
 # Define variáveis:
-nome_algoritmo = "proximal_policy_optimization"
-# nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 101
-n_iter_checkpoints = 10
+# nome_algoritmo = "proximal_policy_optimization"
+nome_algoritmo = "soft_actor_critic"
+n_iter_agente = 2
+n_iter_checkpoints = 1
 Tinf = 25
 
 # Treina e avalia o agente:
