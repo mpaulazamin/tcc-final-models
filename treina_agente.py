@@ -151,8 +151,6 @@ class ShowerEnv(gym.Env):
 
     def step(self, action):
 
-        print(action)
-
         # Tempo de cada iteração:
         self.tempo_final = self.tempo_inicial + self.tempo_iteracao
 
@@ -554,11 +552,15 @@ ray.shutdown()
 ray.init()
 
 # Define variáveis:
-# nome_algoritmo = "proximal_policy_optimization"
-nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 2
-n_iter_checkpoints = 1
+nome_algoritmo = "proximal_policy_optimization"
+n_iter_agente = 101
+n_iter_checkpoints = 10
 Tinf = 25
+
+# nome_algoritmo = "soft_actor_critic"
+# n_iter_agente = 10000
+# n_iter_checkpoints = 1000
+# Tinf = 25
 
 # Treina e avalia o agente:
 treina = True
