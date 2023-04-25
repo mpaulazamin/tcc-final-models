@@ -469,7 +469,7 @@ def avalia_agente(nome_algoritmo, Tinf):
 
     # Gráficos:
     sns.set_style("darkgrid")
-    path_imagens = os.getcwd() + "/imagens/"
+    path_imagens = os.getcwd() + "/models_sac_v2/"
 
     fig, ax = plt.subplots(2, 2, figsize=(20, 17))
     ax[0, 0].plot(tempo_total, SPTs, label="Ação - setpoint da temperatura de saída (SPTs)", color="navy", linestyle="dashed")
