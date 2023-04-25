@@ -19,6 +19,7 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 - h: 0 a 10000
 - Fs: 0 a 100
 - xf: 0 a 1
+- xq: 0 a 1
 - iqb: 0 a 1
 - Tinf: 10 a 35
 
