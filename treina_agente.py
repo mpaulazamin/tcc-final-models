@@ -181,7 +181,6 @@ class ShowerEnv(gym.Env):
 
             # Fração da resistência elétrica:
             self.split_range = round(action[3])      
-            print(self.split_range)     
 
         # Variáveis para simulação - tempo, SPTq, SPh, xq, xs, Tf, Td, Tinf, Fd, Sr:
         self.UT = np.array(
@@ -276,6 +275,7 @@ class ShowerEnv(gym.Env):
         self.Td_total = np.repeat(self.Td, 201) 
         self.Tf_total = np.repeat(self.Tf, 201) 
         self.Tinf_total = np.repeat(self.Tinf, 201) 
+        self.split_range_total = np.repeat(self.split_range, 201)
 
         info = {"SPTq": self.SPTq_total,
                 "Tq": self.Tq_total,
@@ -297,7 +297,8 @@ class ShowerEnv(gym.Env):
                 "Fd": self.Fd_total,
                 "Td": self.Td_total,
                 "Tf": self.Tf_total,
-                "Tinf": self.Tinf_total}
+                "Tinf": self.Tinf_total,
+                "split_range": self.split_range_total,}
 
         return self.obs, reward, done, info
     
@@ -381,6 +382,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     Tt_list = []
     SPTs_list = []
     Ts_list = []
+    split_range_list = []
     Sr_list = []
     Sa_list = []
     xq_list = []
@@ -441,6 +443,7 @@ def avalia_agente(nome_algoritmo, Tinf):
             Td_list.append(info.get("Td"))
             Tf_list.append(info.get("Tf"))
             Tinf_list.append(info.get("Tinf"))
+            split_range_list.append(info.get("split_range"))
 
         print(f"Recompensa total: {episode_reward}")
         print("")
@@ -468,6 +471,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     Td = np.concatenate(Td_list, axis=0)
     Tf = np.concatenate(Tf_list, axis=0)
     Tinf = np.concatenate(Tinf_list, axis=0)
+    split_range = np.concatenate(split_range_list, axis=0)
 
     # Gráficos:
     sns.set_style("darkgrid")
@@ -498,7 +502,8 @@ def avalia_agente(nome_algoritmo, Tinf):
     ax[1, 0].legend()
 
     ax[1, 1].plot(tempo_total, Sa, label="Fração de aquecimento do boiler (Sa)", color="skyblue", linestyle="solid")
-    ax[1, 1].plot(tempo_total, Sr, label="Ação - fração da resistência elétrica (Sr)", color="darkcyan", linestyle="solid")
+    ax[1, 1].plot(tempo_total, Sr, label="Fração da resistência elétrica (Sr)", color="darkcyan", linestyle="solid")
+    ax[1, 1].plot(tempo_total, split_range, label="Ação - split-range", color="black", linestyle="solid")
     ax[1, 1].set_title("Frações da resistência elétrica (Sr) e do aquecimento do boiler (Sa)")
     ax[1, 1].set_xlabel("Tempo em minutos")
     ax[1, 1].set_ylabel("Fração")
