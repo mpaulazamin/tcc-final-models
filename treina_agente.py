@@ -151,8 +151,6 @@ class ShowerEnv(gym.Env):
 
     def step(self, action):
 
-        print(action)
-
         # Tempo de cada iteração:
         self.tempo_final = self.tempo_inicial + self.tempo_iteracao
 
