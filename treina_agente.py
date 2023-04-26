@@ -557,15 +557,15 @@ ray.shutdown()
 ray.init()
 
 # Define variáveis:
-nome_algoritmo = "proximal_policy_optimization"
-n_iter_agente = 101
-n_iter_checkpoints = 10
-Tinf = 25
-
-# nome_algoritmo = "soft_actor_critic"
-# n_iter_agente = 2501
-# n_iter_checkpoints = 500
+# nome_algoritmo = "proximal_policy_optimization"
+# n_iter_agente = 101
+# n_iter_checkpoints = 10
 # Tinf = 25
+
+nome_algoritmo = "soft_actor_critic"
+n_iter_agente = 1001
+n_iter_checkpoints = 100
+Tinf = 25
 
 # Treina e avalia o agente:
 treina = True
