@@ -306,17 +306,15 @@ class ShowerEnv(gym.Env):
 def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 
     # Define o local para salvar o modelo treinado e os checkpoints:
-    path_root_models = "/models_sac_v2/"
+    path_root_models = "/models/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
     # Define as configurações para o algoritmo e constrói o agente:
     if nome_algoritmo == "proximal_policy_optimization":
-        # agent = ppo.PPOTrainer(env=ShowerEnv, config={"env_config": {"Tinf": Tinf}})
         config = ppo.PPOConfig()
 
     if nome_algoritmo == "soft_actor_critic":
-        # agent = sac.SACTrainer(env=ShowerEnv, config={"env_config": {"Tinf": Tinf}})
         config = sac.SACConfig()
 
     # Constrói o agente:
@@ -360,7 +358,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 def avalia_agente(nome_algoritmo, Tinf):
 
     # Define o local do checkpoint salvo:
-    path_root_models = "/models_sac_v2/"
+    path_root_models = "/models/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -469,7 +467,7 @@ def avalia_agente(nome_algoritmo, Tinf):
 
     # Gráficos:
     sns.set_style("darkgrid")
-    path_imagens = os.getcwd() + "/models_sac_v2/"
+    path_imagens = os.getcwd() + "/imagens/"
 
     fig, ax = plt.subplots(2, 2, figsize=(20, 17))
     ax[0, 0].plot(tempo_total, SPTs, label="Ação - setpoint da temperatura de saída (SPTs)", color="navy", linestyle="dashed")
@@ -558,12 +556,12 @@ ray.init()
 # Tinf = 25
 
 nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 2501
-n_iter_checkpoints = 500
+n_iter_agente = 2001
+n_iter_checkpoints = 100
 Tinf = 25
 
 # Treina e avalia o agente:
-treina = False
+treina = True
 avalia = True
 
 if treina:
