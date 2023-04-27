@@ -70,10 +70,10 @@ class ShowerEnv(gym.Env):
                 dtype=np.float32
             )
 
-        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
+        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf, custo_eletrico_kwh, custo_eletrico, custo_gas, custo_agua:
         self.observation_space = gym.spaces.Box(
-            low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10]),
-            high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35]),
+            low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0]),
+            high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35, 3, 1, 1, 1]),
             dtype=np.float32, 
         )
 
@@ -136,8 +136,9 @@ class ShowerEnv(gym.Env):
         self.I_buffer = self.Kp * self.Y0[id] * (1 - self.b)
         self.D_buffer = np.array([0, 0, 0, 0])  
 
-        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
+        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf, custo_eletrico_kwh, custo_eletrico, custo_gas, custo_agua:
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf,
+                             self.custo_eletrico_kwh, self.custo_eletrico, self.custo_gas, self.custo_agua],
                              dtype=np.float32)
         
         return self.obs
@@ -235,8 +236,9 @@ class ShowerEnv(gym.Env):
         # Cálculo do custo da água:
         self.custo_agua = custo_agua_banho(self.Fs, self.custo_agua_m3, self.tempo_iteracao)
 
-        # Estados - Ts, Tq, Tt, h, Fs, xf, iqb, Tinf:
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
+        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf, custo_eletrico_kwh, custo_eletrico, custo_gas, custo_agua:
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf,
+                             self.custo_eletrico_kwh, self.custo_eletrico, self.custo_gas, self.custo_agua],
                              dtype=np.float32)
 
         # Define a recompensa:
