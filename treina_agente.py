@@ -21,10 +21,6 @@ from controle_temperatura_saida import custo_eletrico_banho
 from controle_temperatura_saida import custo_gas_banho
 from controle_temperatura_saida import custo_agua_banho
 
-seed = 33
-random.seed(seed)
-np.random.seed(seed)
-
 
 class ShowerEnv(gym.Env):
     """Ambiente para simulação do modelo de chuveiro."""
@@ -79,16 +75,10 @@ class ShowerEnv(gym.Env):
                 dtype=np.float32
             )
 
-        # Removendo iqb:
         # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
-        # self.observation_space = gym.spaces.Box(
-        #     low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10]),
-        #     high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35]),
-        #     dtype=np.float32, 
-        # )
         self.observation_space = gym.spaces.Box(
-            low=np.array([0, 0, 0, 0, 0, 0, 0, 10]),
-            high=np.array([100, 100, 100, 10000, 100, 1, 1, 35]),
+            low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10]),
+            high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35]),
             dtype=np.float32, 
         )
 
@@ -97,9 +87,6 @@ class ShowerEnv(gym.Env):
         # Temperatura ambiente:
         Tinf = self.Tinf
         self.Tinf = Tinf
-
-        # Random seed:
-        super().reset(seed=seed)
 
         # Tempo inicial:
         self.tempo_inicial = 0
@@ -150,9 +137,7 @@ class ShowerEnv(gym.Env):
         self.D_buffer = np.array([0, 0, 0, 0])  
 
         # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
-        # self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
-        #                      dtype=np.float32)
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.Tinf],
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
                              dtype=np.float32)
         
         return self.obs
@@ -251,9 +236,7 @@ class ShowerEnv(gym.Env):
         self.custo_agua = custo_agua_banho(self.Fs, self.custo_agua_m3, self.tempo_iteracao)
 
         # Estados - Ts, Tq, Tt, h, Fs, xf, iqb, Tinf:
-        # self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
-        #                      dtype=np.float32)
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.Tinf],
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
                              dtype=np.float32)
 
         # Define a recompensa:
@@ -576,11 +559,6 @@ nome_algoritmo = "soft_actor_critic"
 n_iter_agente = 2001
 n_iter_checkpoints = 100
 Tinf = 25
-
-# nome_algoritmo = "soft_actor_critic"
-# n_iter_agente = 1001
-# n_iter_checkpoints = 100
-# Tinf = 25
 
 # Treina e avalia o agente:
 treina = True
