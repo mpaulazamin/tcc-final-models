@@ -304,6 +304,7 @@ class ShowerEnv(gym.Env):
         self.Ts_total = self.YY[:,3]
         self.xq_total = self.UU[:,2]
         self.xf_total = self.UU[:,1]
+        self.Sr_total = np.repeat(self.Sr, 201)
         self.xs_total = np.repeat(self.xs, 201)
         self.Fs_total = np.repeat(self.Fs, 201)    
         self.Fd_total = np.repeat(self.Fd, 201) 
@@ -318,7 +319,7 @@ class ShowerEnv(gym.Env):
                 "Tt": self.Tt_total,
                 "SPTs": self.SPTs_total,
                 "Ts": self.Ts_total,
-                "Sr": self.Sr,
+                "Sr": self.Sr_total,
                 "Sa": self.Sa_total,
                 "xq": self.xq_total,
                 "xf": self.xf_total,
@@ -688,16 +689,16 @@ ray.init()
 
 # Define variáveis:
 nome_algoritmo = "proximal_policy_optimization"
-n_iter_agente = 101
-n_iter_checkpoints = 10
+n_iter_agente = 2
+n_iter_checkpoints = 1
 
 # nome_algoritmo = "soft_actor_critic"
 # n_iter_agente = 1001
 # n_iter_checkpoints = 100
 
 # Treina e avalia o agente:
-treina = True
-avalia = False
+treina = False
+avalia = True
 
 if treina:
 
