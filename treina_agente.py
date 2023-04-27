@@ -191,7 +191,7 @@ class ShowerEnv(gym.Env):
                 # Abertura da válvula de saída:
                 self.xs = round((action[2] * np.std([0.1, 0.99])) + np.mean([0.1, 0.99]), 2)
 
-                # Fração da resistência elétrica:
+                # Split-range:
                 self.split_range = round((action[3] * np.std([0, 1])) + np.mean([0, 1]))      
 
         else:
@@ -205,7 +205,7 @@ class ShowerEnv(gym.Env):
                 # Abertura da válvula de saída:
                 self.xs = round(action[2][0], 2)
 
-                # Fração da resistência elétrica:
+                # Split-range:
                 self.split_range = action[3]
 
             if self.nome_algoritmo == "soft_actor_critic":
@@ -218,7 +218,7 @@ class ShowerEnv(gym.Env):
                 # Abertura da válvula de saída:
                 self.xs = round(action[2], 2)
 
-                # Fração da resistência elétrica:
+                # Split-range:
                 self.split_range = round(action[3])    
 
         # Variáveis para simulação - tempo, SPTq, SPh, xq, xs, Tf, Td, Tinf, Fd, Sr:
