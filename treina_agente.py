@@ -300,7 +300,7 @@ class ShowerEnv(gym.Env):
 def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 
     # Define o local para salvar o modelo treinado e os checkpoints:
-    path_root_models = "/models_sac_v2/"
+    path_root_models = "/models/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -354,7 +354,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 def avalia_agente(nome_algoritmo, Tinf):
 
     # Define o local do checkpoint salvo:
-    path_root_models = "/models_sac_v2/"
+    path_root_models = "/models/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -466,7 +466,7 @@ def avalia_agente(nome_algoritmo, Tinf):
 
     # Gráficos:
     sns.set_style("darkgrid")
-    path_imagens = os.getcwd() + "/models_sac_v2/"
+    path_imagens = os.getcwd() + "/imagens/"
 
     fig, ax = plt.subplots(2, 2, figsize=(20, 17))
     ax[0, 0].plot(tempo_total, SPTs, label="Ação - setpoint da temperatura de saída (SPTs)", color="navy", linestyle="dashed")
