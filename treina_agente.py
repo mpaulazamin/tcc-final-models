@@ -697,8 +697,8 @@ n_iter_checkpoints = 10
 # n_iter_checkpoints = 100
 
 # Treina e avalia o agente:
-treina = False
-avalia = True
+treina = True
+avalia = False
 
 if treina:
 
