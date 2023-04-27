@@ -240,7 +240,7 @@ class ShowerEnv(gym.Env):
                              dtype=np.float32)
 
         # Define a recompensa:
-        reward = self.iqb
+        reward = 5 * self.iqb - 2 * self.custo_eletrico - self.custo_agua - self.custo_gas
 
         # Incrementa tempo inicial:
         self.tempo_inicial = self.tempo_inicial + self.tempo_iteracao
@@ -524,17 +524,17 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     # plt.show()
 
     fig, ax = plt.subplots(1, 1, figsize=(8, 5))
-    ax.plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
-    ax.set_title("Índice de qualidade do banho (IQB)")
-    ax.set_xlabel("Ação")
-    ax.set_ylabel("Índice")
-    ax.legend()
+    ax[0].plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
+    ax[0].set_title("Índice de qualidade do banho (IQB)")
+    ax[0].set_xlabel("Ação")
+    ax[0].set_ylabel("Índice")
+    ax[0].legend()
 
-    # ax[1].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
-    # ax[1].set_title("Recompensa do agente")
-    # ax[1].set_xlabel("Ação")
-    # ax[1].set_ylabel("Índice")
-    # ax[1].legend()
+    ax[1].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
+    ax[1].set_title("Recompensa do agente")
+    ax[1].set_xlabel("Ação")
+    ax[1].set_ylabel("Índice")
+    ax[1].legend()
     plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
