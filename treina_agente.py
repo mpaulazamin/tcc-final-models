@@ -79,7 +79,7 @@ class ShowerEnv(gym.Env):
                 dtype=np.float32
             )
 
-        # Removendo o iqb:
+        # Removendo iqb:
         # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
         # self.observation_space = gym.spaces.Box(
         #     low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10]),
@@ -576,6 +576,11 @@ nome_algoritmo = "soft_actor_critic"
 n_iter_agente = 2001
 n_iter_checkpoints = 100
 Tinf = 25
+
+# nome_algoritmo = "soft_actor_critic"
+# n_iter_agente = 1001
+# n_iter_checkpoints = 100
+# Tinf = 25
 
 # Treina e avalia o agente:
 treina = True
