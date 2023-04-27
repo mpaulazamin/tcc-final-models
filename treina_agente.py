@@ -84,10 +84,10 @@ class ShowerEnv(gym.Env):
                     dtype=np.float32
                 )
 
-        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf, custo_eletrico_kwh, custo_eletrico, custo_gas, custo_agua:
+        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
         self.observation_space = gym.spaces.Box(
-            low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0]),
-            high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35, 3, 1, 1, 1]),
+            low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10]),
+            high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35]),
             dtype=np.float32, 
         )
 
@@ -150,9 +150,8 @@ class ShowerEnv(gym.Env):
         self.I_buffer = self.Kp * self.Y0[id] * (1 - self.b)
         self.D_buffer = np.array([0, 0, 0, 0])  
 
-        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf, custo_eletrico_kwh, custo_eletrico, custo_gas, custo_agua:
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf,
-                             self.custo_eletrico_kwh, self.custo_eletrico, self.custo_gas, self.custo_agua],
+        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
                              dtype=np.float32)
         
         return self.obs
@@ -283,13 +282,12 @@ class ShowerEnv(gym.Env):
         # Cálculo do custo da água:
         self.custo_agua = custo_agua_banho(self.Fs, self.custo_agua_m3, self.tempo_iteracao)
 
-        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf, custo_eletrico_kwh, custo_eletrico, custo_gas, custo_agua:
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf,
-                             self.custo_eletrico_kwh, self.custo_eletrico, self.custo_gas, self.custo_agua],
+        # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf:
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xf, self.xq, self.iqb, self.Tinf],
                              dtype=np.float32)
 
         # Define a recompensa:
-        reward = 5 * self.iqb - 2 * self.custo_eletrico - self.custo_agua - self.custo_gas
+        reward = self.iqb
 
         # Incrementa tempo inicial:
         self.tempo_inicial = self.tempo_inicial + self.tempo_iteracao
@@ -647,18 +645,18 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
-    fig, ax = plt.subplots(1, 2, figsize=(15, 5))
-    ax[0].plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
-    ax[0].set_title("Índice de qualidade do banho (IQB)")
-    ax[0].set_xlabel("Ação")
-    ax[0].set_ylabel("Índice")
-    ax[0].legend()
+    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
+    ax.plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
+    ax.set_title("Índice de qualidade do banho (IQB)")
+    ax.set_xlabel("Ação")
+    ax.set_ylabel("Índice")
+    ax.legend()
 
-    ax[1].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
-    ax[1].set_title("Recompensa do agente")
-    ax[1].set_xlabel("Ação")
-    ax[1].set_ylabel("Índice")
-    ax[1].legend()
+    # ax[1].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
+    # ax[1].set_title("Recompensa do agente")
+    # ax[1].set_xlabel("Ação")
+    # ax[1].set_ylabel("Índice")
+    # ax[1].legend()
     plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
