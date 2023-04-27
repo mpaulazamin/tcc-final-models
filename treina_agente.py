@@ -651,12 +651,12 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
-    fig, ax = plt.subplots(1, 2, figsize=(8, 5))
-    ax[0].plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
-    ax[0].set_title("Índice de qualidade do banho (IQB)")
-    ax[0].set_xlabel("Ação")
-    ax[0].set_ylabel("Índice")
-    ax[0].legend()
+    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
+    ax.plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
+    ax.set_title("Índice de qualidade do banho (IQB)")
+    ax.set_xlabel("Ação")
+    ax.set_ylabel("Índice")
+    ax.legend()
 
     # ax[1].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
     # ax[1].set_title("Recompensa do agente")
