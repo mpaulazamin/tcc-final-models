@@ -38,8 +38,8 @@ class ShowerEnv(gym.Env):
         # Tempo de cada iteracao:
         self.tempo_iteracao = 2
 
-        # Utiliza split-range:
-        self.Sr = 0
+        # Não utiliza split-range:
+        self.split_range = 0
 
         # Potência da resistência elétrica em kW:
         self.potencia_eletrica = 5.5
@@ -51,14 +51,14 @@ class ShowerEnv(gym.Env):
         self.custo_gas_kg = 3
         self.custo_agua_m3 = 4
 
-        # Ações - SPTs, SPTq, xs, split-range:
+        # Ações - SPTs, SPTq, xs, Sr:
         if self.nome_algoritmo == "proximal_policy_optimization":
             self.action_space = gym.spaces.Tuple(
                 (
                     gym.spaces.Box(low=30, high=40, shape=(1,), dtype=np.float32),
                     gym.spaces.Box(low=30, high=70, shape=(1,), dtype=np.float32),
                     gym.spaces.Box(low=0.01, high=0.99, shape=(1,), dtype=np.float32),
-                    gym.spaces.Discrete(2, start=0),
+                    gym.spaces.Box(low=0, high=1, shape=(1,), dtype=np.float32)
                 ),
             )
         
@@ -158,8 +158,8 @@ class ShowerEnv(gym.Env):
             # Abertura da válvula de saída:
             self.xs = round(action[2][0], 2)
 
-            # Split-range:
-            self.split_range = action[3]
+            # Fração da resistência elétrica:
+            self.Sr = round(action[3][0], 2)
 
         if self.nome_algoritmo == "soft_actor_critic":
             # Setpoint da temperatura de saída:
@@ -171,8 +171,8 @@ class ShowerEnv(gym.Env):
             # Abertura da válvula de saída:
             self.xs = round(action[2], 2)
 
-            # Split-range:
-            self.split_range = round(action[3])      
+            # Fração da resistência elétrica:
+            self.Sr = round(action[3], 2)        
 
         # Variáveis para simulação - tempo, SPTq, SPh, xq, xs, Tf, Td, Tinf, Fd, Sr:
         self.UT = np.array(
@@ -210,7 +210,7 @@ class ShowerEnv(gym.Env):
         self.Sa_total =  self.UU[:,0]
 
         # Fração da resistência elétrica utilizada durante a iteração:
-        self.Sr_total = self.UU[:,8]
+        self.Sr = self.UU[:,8][-1]
 
         # Valor final da abertura de corrente fria:
         self.xf = self.UU[:,1][-1]
@@ -228,7 +228,7 @@ class ShowerEnv(gym.Env):
         self.iqb = calculo_iqb(self.Ts, self.Fs)
 
         # Cálculo do custo elétrico do banho:
-        self.custo_eletrico = custo_eletrico_banho(self.Sr_total, self.potencia_eletrica, self.custo_eletrico_kwh, self.dt)
+        self.custo_eletrico = custo_eletrico_banho(self.Sr, self.potencia_eletrica, self.custo_eletrico_kwh, self.tempo_iteracao)
 
         # Cálculo do custo de gás do banho:
         self.custo_gas = custo_gas_banho(self.Sa_total, self.potencia_aquecedor, self.custo_gas_kg, self.dt)
@@ -263,12 +263,12 @@ class ShowerEnv(gym.Env):
         self.xq_total = self.UU[:,2]
         self.xf_total = self.UU[:,1]
         self.xs_total = np.repeat(self.xs, 201)
+        self.Sr_total = np.repeat(self.Sr, 201)
         self.Fs_total = np.repeat(self.Fs, 201)    
         self.Fd_total = np.repeat(self.Fd, 201) 
         self.Td_total = np.repeat(self.Td, 201) 
         self.Tf_total = np.repeat(self.Tf, 201) 
         self.Tinf_total = np.repeat(self.Tinf, 201) 
-        self.split_range_total = np.repeat(self.split_range, 201)
 
         info = {"SPTq": self.SPTq_total,
                 "Tq": self.Tq_total,
@@ -292,8 +292,7 @@ class ShowerEnv(gym.Env):
                 "Fd": self.Fd_total,
                 "Td": self.Td_total,
                 "Tf": self.Tf_total,
-                "Tinf": self.Tinf_total,
-                "split_range": self.split_range_total,}
+                "Tinf": self.Tinf_total,}
 
         return self.obs, reward, done, info
     
@@ -375,7 +374,6 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     Tt_list = []
     SPTs_list = []
     Ts_list = []
-    split_range_list = []
     Sr_list = []
     Sa_list = []
     xq_list = []
@@ -440,7 +438,6 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
             Td_list.append(info.get("Td"))
             Tf_list.append(info.get("Tf"))
             Tinf_list.append(info.get("Tinf"))
-            split_range_list.append(info.get("split_range"))
 
         print(f"Recompensa total: {episode_reward}")
         print("")
@@ -468,7 +465,6 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     Td = np.concatenate(Td_list, axis=0)
     Tf = np.concatenate(Tf_list, axis=0)
     Tinf = np.concatenate(Tinf_list, axis=0)
-    split_range = np.concatenate(split_range_list, axis=0)
 
     # Gráficos:
     sns.set_style("darkgrid")
@@ -500,7 +496,6 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
 
     ax[1, 1].plot(tempo_total, Sa, label="Fração de aquecimento do boiler (Sa)", color="skyblue", linestyle="solid")
     ax[1, 1].plot(tempo_total, Sr, label="Fração da resistência elétrica (Sr)", color="darkcyan", linestyle="solid")
-    ax[1, 1].plot(tempo_total, split_range, label="Ação - split-range", color="black", linestyle="solid")
     ax[1, 1].set_title("Frações da resistência elétrica (Sr) e do aquecimento do boiler (Sa)")
     ax[1, 1].set_xlabel("Tempo em minutos")
     ax[1, 1].set_ylabel("Fração")
