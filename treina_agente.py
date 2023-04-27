@@ -22,10 +22,6 @@ from controle_temperatura_saida import custo_eletrico_banho
 from controle_temperatura_saida import custo_gas_banho
 from controle_temperatura_saida import custo_agua_banho
 
-seed = 33
-random.seed(seed)
-np.random.seed(seed)
-
 
 class ShowerEnv(gym.Env):
     """Ambiente para simulação do modelo de chuveiro."""
@@ -105,9 +101,6 @@ class ShowerEnv(gym.Env):
         self.Fd = 0
         self.Td = self.Tinf
         self.Tf = self.Tinf
-
-        # Random seed:
-        super().reset(seed=seed)
 
         # Tempo inicial:
         self.tempo_inicial = 0
@@ -701,8 +694,8 @@ ray.init()
 
 # Define variáveis:
 nome_algoritmo = "proximal_policy_optimization"
-n_iter_agente = 2
-n_iter_checkpoints = 1
+n_iter_agente = 21
+n_iter_checkpoints = 5
 
 # nome_algoritmo = "soft_actor_critic"
 # n_iter_agente = 1001
@@ -735,7 +728,7 @@ if treina:
 if avalia:
 
     # Define o concept e o selector:
-    concept = "banho_noite_amena"
+    concept = "banho_dia_quente"
     selector = True
 
     avalia_agente(nome_algoritmo, concept, selector)
