@@ -550,7 +550,7 @@ ray.init()
 # Tinf = 25
 
 nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 2001
+n_iter_agente = 1001
 n_iter_checkpoints = 100
 Tinf = 25
 
