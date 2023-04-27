@@ -45,11 +45,6 @@ class ShowerEnv(gym.Env):
         # Tempo de cada iteracao:
         self.tempo_iteracao = 2
 
-        # Distúrbios e temperatura ambiente - Fd, Td, Tf, Tinf:
-        self.Fd = 0
-        self.Td = self.Tinf
-        self.Tf = self.Tinf
-
         # Utiliza split-range:
         self.Sr = 0
 
@@ -63,7 +58,7 @@ class ShowerEnv(gym.Env):
         self.custo_gas_kg = 3
         self.custo_agua_m3 = 4
 
-        # Concept selector seleciona qual concept já treinado será utilizado:
+        # Concept selector seleciona qual concept treinado será utilizado:
         if self.selector == True:
             self.action_space = gym.spaces.Discrete(6)
             self.models = []
@@ -72,7 +67,6 @@ class ShowerEnv(gym.Env):
                 self.models.append(Policy.from_checkpoint(glob.glob(i+"/*")[-1])['default_policy'])
 
             self.model = self.models
-            print(self.model)
 
         # Ações - SPTs, SPTq, xs, split-range:
         else:
@@ -97,15 +91,20 @@ class ShowerEnv(gym.Env):
         # Estados - Ts, Tq, Tt, h, Fs, xf, xq, iqb, Tinf, custo_eletrico_kwh, custo_eletrico, custo_gas, custo_agua:
         self.observation_space = gym.spaces.Box(
             low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0]),
-            high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35, 5, 1, 1, 1]),
+            high=np.array([100, 100, 100, 10000, 100, 1, 1, 1, 35, 3, 1, 1, 1]),
             dtype=np.float32, 
         )
 
     def reset(self):
         
         # Temperatura ambiente e custo da energia elétrica em kWh:
-        self.Tinf = random.choice([self.Tinf_list])
-        self.custo_eletrico_kwh = random.choice([self.custo_eletrico_kwh_list])
+        self.Tinf = random.choice(self.Tinf_list)
+        self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
+
+        # Distúrbios Fd e Td, temperatura da corrente fria Tf:
+        self.Fd = 0
+        self.Td = self.Tinf
+        self.Tf = self.Tinf
 
         # Random seed:
         super().reset(seed=seed)
@@ -297,15 +296,10 @@ class ShowerEnv(gym.Env):
                              dtype=np.float32)
 
         # Define a recompensa:
-        reward = 5 * self.iqb - self.custo_eletrico - self.custo_agua - self.custo_gas
+        reward = 5 * self.iqb - 2 * self.custo_eletrico - self.custo_agua - self.custo_gas
 
         # Incrementa tempo inicial:
         self.tempo_inicial = self.tempo_inicial + self.tempo_iteracao
-
-        # Termina o episódio se o tempo for maior que 14 ou se o nível do tanque ultrapassar 100:
-        done = False
-        if self.tempo_final == 14 or self.h > 100: 
-            done = True
 
         # Para visualização:
         self.SPTq_total = np.repeat(self.SPTq, 201)
@@ -342,12 +336,18 @@ class ShowerEnv(gym.Env):
                 "custo_eletrico": self.custo_eletrico,
                 "custo_gas": self.custo_gas,
                 "custo_agua": self.custo_agua,
-                "recompensa": self.reward,
+                "recompensa": reward,
+                "custo_eletrico_kwh": self.custo_eletrico_kwh,
                 "Fd": self.Fd_total,
                 "Td": self.Td_total,
                 "Tf": self.Tf_total,
                 "Tinf": self.Tinf_total,
                 "split_range": self.split_range_total,}
+
+        # Termina o episódio se o tempo for maior que 14 ou se o nível do tanque ultrapassar 100:
+        done = False
+        if self.tempo_final == 14 or self.h > 100: 
+            done = True
 
         return self.obs, reward, done, info
     
@@ -442,7 +442,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, concept, se
     return path
 
 
-def avalia_agente(nome_algoritmo, concept, selector=False):
+def avalia_agente(nome_algoritmo, concept, selector=True):
 
     # Local onde os modelos foram salvos:
     path_root_models = "/models/"
@@ -457,7 +457,7 @@ def avalia_agente(nome_algoritmo, concept, selector=False):
     banho_noite_quente = path + "banho_noite_quente"
     selector_path = path + "seleciona_banho"
 
-    models = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
 
     # Define os concepts:
     if concept == "banho_dia_frio":
@@ -494,7 +494,7 @@ def avalia_agente(nome_algoritmo, concept, selector=False):
         "nome_algoritmo": nome_algoritmo,
         "custo_eletrico_kwh_list": custo_eletrico_kwh_list,
         "selector": selector,
-        "model": models
+        "model": model
     })
     obs = env.reset()
 
@@ -539,11 +539,13 @@ def avalia_agente(nome_algoritmo, concept, selector=False):
             # Seleciona ações:
             action = agent.compute_single_action(obs)
             print(f"Iteração: {i}")
-            print(f"Ações: {action}")
+            print(f"Ação (número do concept selecionado): {action}")
 
             # Retorna os estados e a recompensa:
             obs, reward, done, info = env.step(action)
             print(f"Estados: {obs}")
+            print(f"Temperatura ambiente: {np.unique(info.get('Tinf'))[0]}")
+            print(f"Custo elétrico do kWh: {info.get('custo_eletrico_kwh')}")
 
             # Recompensa total:
             episode_reward += reward
@@ -573,6 +575,7 @@ def avalia_agente(nome_algoritmo, concept, selector=False):
             Tf_list.append(info.get("Tf"))
             Tinf_list.append(info.get("Tinf"))
             split_range_list.append(info.get("split_range"))
+            print("")
 
         print(f"Recompensa total: {episode_reward}")
         print("")
@@ -664,30 +667,30 @@ def avalia_agente(nome_algoritmo, concept, selector=False):
     ax[0].set_ylabel("Índice")
     ax[0].legend()
 
-    ax[0].plot(tempo_acoes, iqb_list, label="Recompensa", color="black", linestyle="solid")
-    ax[0].set_title("Recompensa do agente")
-    ax[0].set_xlabel("Ação")
-    ax[0].set_ylabel("Índice")
-    ax[0].legend()
+    ax[1].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
+    ax[1].set_title("Recompensa do agente")
+    ax[1].set_xlabel("Ação")
+    ax[1].set_ylabel("Índice")
+    ax[1].legend()
     plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
-    ax[1].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="black", linestyle="solid")
-    ax[1].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="gray", linestyle="solid")
-    ax[1].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="dodgerblue", linestyle="solid")
-    ax[1].set_title("Custos do banho em cada ação")
+    ax[0].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="black", linestyle="solid")
+    ax[0].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="gray", linestyle="solid")
+    ax[0].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="dodgerblue", linestyle="solid")
+    ax[0].set_title("Custos do banho em cada ação")
+    ax[0].set_xlabel("Ação")
+    ax[0].set_ylabel("Custos em reais")
+    ax[0].legend()
+
+    ax[1].plot(tempo_acoes, custo_eletrico_list_acumulado, label="Custo elétrico", color="black", linestyle="solid")
+    ax[1].plot(tempo_acoes, custo_gas_list_acumulado, label="Custo do gás", color="gray", linestyle="solid")
+    ax[1].plot(tempo_acoes, custo_agua_list_acumulado, label="Custo da água", color="dodgerblue", linestyle="solid")
+    ax[1].set_title("Custos cumulativos do banho")
     ax[1].set_xlabel("Ação")
     ax[1].set_ylabel("Custos em reais")
     ax[1].legend()
-
-    ax[2].plot(tempo_acoes, custo_eletrico_list_acumulado, label="Custo elétrico", color="black", linestyle="solid")
-    ax[2].plot(tempo_acoes, custo_gas_list_acumulado, label="Custo do gás", color="gray", linestyle="solid")
-    ax[2].plot(tempo_acoes, custo_agua_list_acumulado, label="Custo da água", color="dodgerblue", linestyle="solid")
-    ax[2].set_title("Custos cumulativos do banho")
-    ax[2].set_xlabel("Ação")
-    ax[2].set_ylabel("Custos em reais")
-    ax[2].legend()
     plt.savefig(path_imagens + "resultado4_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
@@ -698,20 +701,19 @@ ray.init()
 
 # Define variáveis:
 nome_algoritmo = "proximal_policy_optimization"
-n_iter_agente = 101
-n_iter_checkpoints = 10
-Tinf = 25
+n_iter_agente = 2
+n_iter_checkpoints = 1
 
 # nome_algoritmo = "soft_actor_critic"
 # n_iter_agente = 1001
 # n_iter_checkpoints = 100
-# Tinf = 25
 
 # Treina e avalia o agente:
 treina = True
-avalia = True
+avalia = False
 
 if treina:
+
     # Treina cada concept:
     banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
     banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
@@ -720,7 +722,7 @@ if treina:
     banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
     banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
 
-    models = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
 
     # Treina o selector:
     selector = treina_agente(nome_algoritmo, 
@@ -728,7 +730,7 @@ if treina:
         n_iter_checkpoints,
         "seleciona_banho", 
         True, 
-        models)
+        model)
 
 if avalia:
 
