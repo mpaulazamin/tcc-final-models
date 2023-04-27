@@ -27,20 +27,16 @@ class ShowerEnv(gym.Env):
 
     def __init__(self, env_config):
 
-        # Temperatura ambiente:
-        self.Tinf = env_config["Tinf"]
+        # Temperatura ambiente, algoritmo, custo da energia elétrica em kWh:
+        self.Tinf_list = env_config["Tinf_list"]
         self.nome_algoritmo = env_config["nome_algoritmo"]
+        self.custo_eletrico_kwh_list = env_config["custo_eletrico_kwh_list"]
 
         # Tempo de simulação:
         self.dt = 0.01
 
         # Tempo de cada iteracao:
         self.tempo_iteracao = 2
-
-        # Distúrbios e temperatura ambiente - Fd, Td, Tf, Tinf:
-        self.Fd = 0
-        self.Td = self.Tinf
-        self.Tf = self.Tinf
 
         # Utiliza split-range:
         self.Sr = 0
@@ -51,8 +47,7 @@ class ShowerEnv(gym.Env):
         # Potência do aquecedor boiler em kcal/h:
         self.potencia_aquecedor = 29000
 
-        # Custo da energia elétrica em kWh, do kg do gás, e do m3 da água:
-        self.custo_eletrico_kwh = 2
+        # Custo do kg do gás, e do m3 da água:
         self.custo_gas_kg = 3
         self.custo_agua_m3 = 4
 
@@ -84,9 +79,14 @@ class ShowerEnv(gym.Env):
 
     def reset(self):
         
-        # Temperatura ambiente:
-        Tinf = self.Tinf
-        self.Tinf = Tinf
+        # Temperatura ambiente e custo da energia elétrica em kWh:
+        self.Tinf = random.choice(self.Tinf_list)
+        self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
+
+        # Distúrbios Fd e Td, temperatura da corrente fria Tf:
+        self.Fd = 0
+        self.Td = self.Tinf
+        self.Tf = self.Tinf
 
         # Tempo inicial:
         self.tempo_inicial = 0
@@ -285,6 +285,8 @@ class ShowerEnv(gym.Env):
                 "custo_eletrico": self.custo_eletrico,
                 "custo_gas": self.custo_gas,
                 "custo_agua": self.custo_agua,
+                "recompensa": reward,
+                "custo_eletrico_kwh": self.custo_eletrico_kwh,
                 "Fd": self.Fd_total,
                 "Td": self.Td_total,
                 "Tf": self.Tf_total,
@@ -297,7 +299,7 @@ class ShowerEnv(gym.Env):
         pass
 
 
-def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
+def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf_list, custo_eletrico_kwh_list):
 
     # Define o local para salvar o modelo treinado e os checkpoints:
     path_root_models = "/models/"
@@ -306,15 +308,13 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 
     # Define as configurações para o algoritmo e constrói o agente:
     if nome_algoritmo == "proximal_policy_optimization":
-        # agent = ppo.PPOTrainer(env=ShowerEnv, config={"env_config": {"Tinf": Tinf}})
         config = ppo.PPOConfig()
 
     if nome_algoritmo == "soft_actor_critic":
-        # agent = sac.SACTrainer(env=ShowerEnv, config={"env_config": {"Tinf": Tinf}})
         config = sac.SACConfig()
 
     # Constrói o agente:
-    config.environment(env=ShowerEnv, env_config={"Tinf": Tinf, "nome_algoritmo": nome_algoritmo})
+    config.environment(env=ShowerEnv, env_config={"Tinf_list": Tinf_list, "nome_algoritmo": nome_algoritmo, "custo_eletrico_kwh_list": custo_eletrico_kwh_list})
     agent = config.build()
 
     # Armazena resultados:
@@ -351,7 +351,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
     return path
 
 
-def avalia_agente(nome_algoritmo, Tinf):
+def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
 
     # Define o local do checkpoint salvo:
     path_root_models = "/models/"
@@ -362,7 +362,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     agent = Algorithm.from_checkpoint(glob.glob(path +"/*")[-1])
 
     # Constrói o ambiente:
-    env = ShowerEnv({"Tinf": Tinf, "nome_algoritmo": nome_algoritmo})
+    env = ShowerEnv({"Tinf_list": Tinf_list, "nome_algoritmo": nome_algoritmo, "custo_eletrico_kwh_list": custo_eletrico_kwh_list})
     obs = env.reset()
 
     # Para visualização:
@@ -384,6 +384,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     custo_eletrico_list = []
     custo_gas_list = []
     custo_agua_list = []
+    recompensa_list = []
     Fd_list = []
     Td_list = []
     Tf_list = []
@@ -407,6 +408,8 @@ def avalia_agente(nome_algoritmo, Tinf):
             # Retorna os estados e a recompensa:
             obs, reward, done, info = env.step(action)
             print(f"Estados: {obs}")
+            print(f"Temperatura ambiente: {np.unique(info.get('Tinf'))[0]}")
+            print(f"Custo elétrico do kWh: {info.get('custo_eletrico_kwh')}")
 
             # Recompensa total:
             episode_reward += reward
@@ -430,6 +433,7 @@ def avalia_agente(nome_algoritmo, Tinf):
             custo_eletrico_list.append(info.get("custo_eletrico"))
             custo_gas_list.append(info.get("custo_gas"))
             custo_agua_list.append(info.get("custo_agua"))
+            recompensa_list.append(info.get("recompensa"))
             Fd_list.append(info.get("Fd"))
             Td_list.append(info.get("Td"))
             Tf_list.append(info.get("Tf"))
@@ -519,29 +523,38 @@ def avalia_agente(nome_algoritmo, Tinf):
     plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
-    fig, ax = plt.subplots(1, 3, figsize=(20, 5))
-    ax[0].plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
-    ax[0].set_title("Índice de qualidade do banho (IQB)")
+    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
+    ax.plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
+    ax.set_title("Índice de qualidade do banho (IQB)")
+    ax.set_xlabel("Ação")
+    ax.set_ylabel("Índice")
+    ax.legend()
+
+    # ax[1].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
+    # ax[1].set_title("Recompensa do agente")
+    # ax[1].set_xlabel("Ação")
+    # ax[1].set_ylabel("Índice")
+    # ax[1].legend()
+    plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
+    # plt.show()
+
+    fig, ax = plt.subplots(1, 2, figsize=(15, 5))
+    ax[0].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="black", linestyle="solid")
+    ax[0].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="gray", linestyle="solid")
+    ax[0].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="dodgerblue", linestyle="solid")
+    ax[0].set_title("Custos do banho em cada ação")
     ax[0].set_xlabel("Ação")
-    ax[0].set_ylabel("Índice")
+    ax[0].set_ylabel("Custos em reais")
     ax[0].legend()
 
-    ax[1].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="black", linestyle="solid")
-    ax[1].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="gray", linestyle="solid")
-    ax[1].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="dodgerblue", linestyle="solid")
-    ax[1].set_title("Custos do banho em cada ação")
+    ax[1].plot(tempo_acoes, custo_eletrico_list_acumulado, label="Custo elétrico", color="black", linestyle="solid")
+    ax[1].plot(tempo_acoes, custo_gas_list_acumulado, label="Custo do gás", color="gray", linestyle="solid")
+    ax[1].plot(tempo_acoes, custo_agua_list_acumulado, label="Custo da água", color="dodgerblue", linestyle="solid")
+    ax[1].set_title("Custos cumulativos do banho")
     ax[1].set_xlabel("Ação")
     ax[1].set_ylabel("Custos em reais")
     ax[1].legend()
-
-    ax[2].plot(tempo_acoes, custo_eletrico_list_acumulado, label="Custo elétrico", color="black", linestyle="solid")
-    ax[2].plot(tempo_acoes, custo_gas_list_acumulado, label="Custo do gás", color="gray", linestyle="solid")
-    ax[2].plot(tempo_acoes, custo_agua_list_acumulado, label="Custo da água", color="dodgerblue", linestyle="solid")
-    ax[2].set_title("Custos cumulativos do banho")
-    ax[2].set_xlabel("Ação")
-    ax[2].set_ylabel("Custos em reais")
-    ax[2].legend()
-    plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado4_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
 
@@ -550,24 +563,25 @@ ray.shutdown()
 ray.init()
 
 # Define variáveis:
-# nome_algoritmo = "proximal_policy_optimization"
-# n_iter_agente = 101
-# n_iter_checkpoints = 10
-# Tinf = 25
+nome_algoritmo = "proximal_policy_optimization"
+n_iter_agente = 101
+n_iter_checkpoints = 10
 
-nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 2001
-n_iter_checkpoints = 100
-Tinf = 25
+# nome_algoritmo = "soft_actor_critic"
+# n_iter_agente = 2001
+# n_iter_checkpoints = 100
+
+Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
 # Treina e avalia o agente:
 treina = True
 avalia = True
 
 if treina:
-    treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf)
+    treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf_list, custo_eletrico_kwh_list)
 if avalia:
-    avalia_agente(nome_algoritmo, Tinf)
+    avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list)
 
 # Reseta o Ray:
 ray.shutdown()
