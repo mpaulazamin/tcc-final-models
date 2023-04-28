@@ -176,7 +176,7 @@ class ShowerEnv(gym.Env):
                 self.SPTq = round((actions[1][0] * np.std([30, 70])) + np.mean([30, 70]), 1)
 
                 # Abertura da válvula de saída:
-                self.xs = round((actions[2][0] * np.std([0.1, 0.99])) + np.mean([0.1, 0.99]), 2)
+                self.xs = round((actions[2][0] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
 
                 # Split-range:
                 self.split_range = actions[3]
@@ -189,7 +189,7 @@ class ShowerEnv(gym.Env):
                 self.SPTq = round((action[1] * np.std([30, 70])) + np.mean([30, 70]), 1)
 
                 # Abertura da válvula de saída:
-                self.xs = round((action[2] * np.std([0.1, 0.99])) + np.mean([0.1, 0.99]), 2)
+                self.xs = round((action[2] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
 
                 # Split-range:
                 self.split_range = round((action[3] * np.std([0, 1])) + np.mean([0, 1]))      
@@ -708,12 +708,25 @@ avalia = False
 if treina:
 
     # Treina cada concept:
-    banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
-    banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
-    banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
-    banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
-    banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
-    banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
+    # banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
+    # banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
+    # banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
+    # banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
+    # banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
+    # banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
+
+    # Local onde os modelos foram salvos:
+    path_root_models = "/models/"
+    path_root = os.getcwd() + path_root_models
+    path = path_root + "results_" + nome_algoritmo + "_concept_"
+
+    banho_dia_frio = path + "banho_dia_frio"
+    banho_noite_fria = path + "banho_noite_fria"
+    banho_dia_ameno = path + "banho_dia_ameno"
+    banho_noite_amena = path + "banho_noite_amena"
+    banho_dia_quente = path + "banho_dia_quente"
+    banho_noite_quente = path + "banho_noite_quente"
+    selector_path = path + "seleciona_banho"
 
     model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
 
