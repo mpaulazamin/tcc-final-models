@@ -72,15 +72,15 @@ class ShowerEnv(gym.Env):
                         gym.spaces.Box(low=30, high=40, shape=(1,), dtype=np.float32),
                         gym.spaces.Box(low=30, high=70, shape=(1,), dtype=np.float32),
                         gym.spaces.Box(low=0.01, high=0.99, shape=(1,), dtype=np.float32),
-                        gym.spaces.Box(low=0, high=1, shape=(1,), dtype=np.float32)
+                        gym.spaces.Box(low=0.01, high=0.99, shape=(1,), dtype=np.float32)
                     ),
                 )
             
             # SAC não funciona com Tuple space:
             if self.nome_algoritmo == "soft_actor_critic":
                 self.action_space = gym.spaces.Box(
-                    low=np.array([30, 30, 0.01, 0]), 
-                    high=np.array([40, 70, 0.99, 1]), 
+                    low=np.array([30, 30, 0.01, 0.01]), 
+                    high=np.array([40, 70, 0.99, 0.99]), 
                     dtype=np.float32
                 )
 
@@ -179,7 +179,7 @@ class ShowerEnv(gym.Env):
                 self.xs = round((actions[2][0] * np.std([0.1, 0.99])) + np.mean([0.1, 0.99]), 2)
 
                 # Fração da resistência elétrica:
-                self.Sr = round((actions[3][0] * np.std([0, 1])) + np.mean([0, 1]), 2)
+                self.Sr = round((actions[3][0] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
 
             if self.nome_algoritmo == "soft_actor_critic":
                 # Setpoint da temperatura de saída:
@@ -192,8 +192,7 @@ class ShowerEnv(gym.Env):
                 self.xs = round((action[2] * np.std([0.1, 0.99])) + np.mean([0.1, 0.99]), 2)
 
                 # Fração da resistência elétrica:
-                self.Sr = round((action[3] * np.std([0, 1])) + np.mean([0, 1]), 2)      
-
+                self.Sr = round((actions[3] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
         else:
             if self.nome_algoritmo == "proximal_policy_optimization":
                 # Setpoint da temperatura de saída:
@@ -703,12 +702,23 @@ avalia = False
 if treina:
 
     # Treina cada concept:
-    banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
-    banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
-    banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
-    banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
-    banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
-    banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
+    # banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
+    # banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
+    # banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
+    # banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
+    # banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
+    # banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
+
+    path_root_models = "/models/"
+    path_root = os.getcwd() + path_root_models
+    path = path_root + "results_" + nome_algoritmo + "_concept_"
+
+    banho_dia_frio = path + "banho_dia_frio"
+    banho_noite_fria = path + "banho_noite_fria"
+    banho_dia_ameno = path + "banho_dia_ameno"
+    banho_noite_amena = path + "banho_noite_amena"
+    banho_dia_quente = path + "banho_dia_quente"
+    banho_noite_quente = path + "banho_noite_quente"
 
     model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
 
