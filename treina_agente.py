@@ -171,28 +171,60 @@ class ShowerEnv(gym.Env):
             if self.nome_algoritmo == "proximal_policy_optimization":
                 # Setpoint da temperatura de saída:
                 self.SPTs = round((actions[0][0] * np.std([30, 40])) + np.mean([30, 40]), 2)
+                if self.SPTs > 40:
+                    self.SPTs = 40
+                if self.SPTs < 30:
+                    self.SPTs = 30
 
                 # Setpoint da temperatura do boiler:
                 self.SPTq = round((actions[1][0] * np.std([30, 70])) + np.mean([30, 70]), 1)
+                if self.SPTq > 70:
+                    self.SPTq = 70
+                if self.SPTq < 70:
+                    self.SPTq = 70
 
                 # Abertura da válvula de saída:
                 self.xs = round((actions[2][0] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
+                if self.xs > 0.99:
+                    self.xs = 0.99
+                if self.xs < 0.01:
+                    self.xs = 0.01
 
                 # Fração da resistência elétrica:
                 self.Sr = round((actions[3][0] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
+                if self.Sr > 0.99:
+                    self.Sr = 0.99
+                if self.Sr < 0.01:
+                    self.Sr = 0.01
 
             if self.nome_algoritmo == "soft_actor_critic":
                 # Setpoint da temperatura de saída:
-                self.SPTs = round((action[0] * np.std([30, 40])) + np.mean([30, 40]), 2)
+                self.SPTs = round((actions[0] * np.std([30, 40])) + np.mean([30, 40]), 2)
+                if self.SPTs > 40:
+                    self.SPTs = 40
+                if self.SPTs < 30:
+                    self.SPTs = 30
 
-                # Fração de aquecimento do boiler:
-                self.SPTq = round((action[1] * np.std([30, 70])) + np.mean([30, 70]), 1)
+                # Setpoint da temperatura do boiler:
+                self.SPTq = round((actions[1] * np.std([30, 70])) + np.mean([30, 70]), 1)
+                if self.SPTq > 70:
+                    self.SPTq = 70
+                if self.SPTq < 70:
+                    self.SPTq = 70
 
                 # Abertura da válvula de saída:
-                self.xs = round((action[2] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
+                self.xs = round((actions[2] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
+                if self.xs > 0.99:
+                    self.xs = 0.99
+                if self.xs < 0.01:
+                    self.xs = 0.01
 
                 # Fração da resistência elétrica:
                 self.Sr = round((actions[3] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
+                if self.Sr > 0.99:
+                    self.Sr = 0.99
+                if self.Sr < 0.01:
+                    self.Sr = 0.01
 
         else:
             if self.nome_algoritmo == "proximal_policy_optimization":
