@@ -180,8 +180,8 @@ class ShowerEnv(gym.Env):
                 self.SPTq = round((actions[1][0] * np.std([30, 70])) + np.mean([30, 70]), 1)
                 if self.SPTq > 70:
                     self.SPTq = 70
-                if self.SPTq < 70:
-                    self.SPTq = 70
+                if self.SPTq < 30:
+                    self.SPTq = 30
 
                 # Abertura da válvula de saída:
                 self.xs = round((actions[2][0] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
@@ -209,8 +209,8 @@ class ShowerEnv(gym.Env):
                 self.SPTq = round((actions[1] * np.std([30, 70])) + np.mean([30, 70]), 1)
                 if self.SPTq > 70:
                     self.SPTq = 70
-                if self.SPTq < 70:
-                    self.SPTq = 70
+                if self.SPTq < 30:
+                    self.SPTq = 30
 
                 # Abertura da válvula de saída:
                 self.xs = round((actions[2] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
