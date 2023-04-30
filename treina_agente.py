@@ -729,8 +729,8 @@ n_iter_checkpoints = 10
 # n_iter_checkpoints = 100
 
 # Treina e avalia o agente:
-treina = True
-avalia = False
+treina = False
+avalia = True
 
 if treina:
 
@@ -766,7 +766,7 @@ if treina:
 if avalia:
 
     # Define o concept e o selector:
-    concept = "banho_dia_quente"
+    concept = "banho_noite_quente"
     selector = True
 
     avalia_agente(nome_algoritmo, concept, selector)
