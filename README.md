@@ -2,14 +2,14 @@
 
 Modelo com malha de inventário para o nível do tanque e com controle liga-desliga do boiler. Com malha cascata, sem split-range.
 
-![image](https://github.com/mpaulazamin/tcc-final-models/blob/single_concept_camada_rto_iqb_com_split_range/imagens/chuveiro_controle_t4a.jpg)
+![image](https://github.com/mpaulazamin/tcc-final-models/blob/single_concept_camada_rto_iqb_sem_split_range_multiple_scenarios/imagens/chuveiro_controle_t4a.jpg)
 
 ### Espaço de ações
 
 - SPTs: 30 a 40 - contínuo
 - SPTq: 30 a 70 - contínuo
 - xs: 0.01 a 0.99 - contínuo
-- split_range: 0 a 1 - discreto para PPO e contínuo para SAC
+- split_range: 0 a 1 - discreto
 
 ### Espaço de estados
 
@@ -35,7 +35,7 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 
 - Foram selecionados aleatoriamente no reset de cada episódio
 - Tinf: 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
-- custo_eletrico_kwh: R$1,00, R$1,25, R$1,50, R$1,75, R$2,00, 2,25
+- custo_eletrico_kwh: R$1,00, R$1,25, R$1,50, R$1,75, R$2,00, R$2,25
 
 ### Episódios
 
