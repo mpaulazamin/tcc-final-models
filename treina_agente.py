@@ -520,7 +520,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
-    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
+    fig, ax = plt.subplots(1, 2, figsize=(15, 5))
     ax[0].plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
     ax[0].set_title("Índice de qualidade do banho (IQB)")
     ax[0].set_xlabel("Ação")
