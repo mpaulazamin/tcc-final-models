@@ -22,6 +22,10 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 - xq: 0 a 1
 - iqb: 0 a 1
 - Tinf: 10 a 35
+- custo_eletrico_kwh: 0 a 3
+- custo_eletrico: 0 a 1 
+- custo_gas: 0 a 1 
+- custo_agua: 0 a 1
 
 ### Variáveis fixas
 
@@ -53,7 +57,7 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 Definida como:
 
 ```bash
-recompensa = iqb
+recompensa = 5 * iqb - 2 * custo_eletrico - custo_gas - custo_agua
 ```
 
 ### Resultados
