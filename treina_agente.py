@@ -171,12 +171,24 @@ class ShowerEnv(gym.Env):
             if self.nome_algoritmo == "proximal_policy_optimization":
                 # Setpoint da temperatura de saída:
                 self.SPTs = round((actions[0][0] * np.std([30, 40])) + np.mean([30, 40]), 2)
+                if self.SPTs > 40:
+                    self.SPTs = 40
+                if self.SPTs < 30:
+                    self.SPTs = 30
 
                 # Setpoint da temperatura do boiler:
                 self.SPTq = round((actions[1][0] * np.std([30, 70])) + np.mean([30, 70]), 1)
+                if self.SPTq > 70:
+                    self.SPTq = 70
+                if self.SPTq < 30:
+                    self.SPTq = 30
 
                 # Abertura da válvula de saída:
-                self.xs = round((actions[2][0] * np.std([0.1, 0.99])) + np.mean([0.1, 0.99]), 2)
+                self.xs = round((actions[2][0] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
+                if self.xs > 0.99:
+                    self.xs = 0.99
+                if self.xs < 0.01:
+                    self.xs = 0.01
 
                 # Split-range:
                 self.split_range = actions[3]
@@ -184,15 +196,31 @@ class ShowerEnv(gym.Env):
             if self.nome_algoritmo == "soft_actor_critic":
                 # Setpoint da temperatura de saída:
                 self.SPTs = round((action[0] * np.std([30, 40])) + np.mean([30, 40]), 2)
+                if self.SPTs > 40:
+                    self.SPTs = 40
+                if self.SPTs < 30:
+                    self.SPTs = 30
 
                 # Fração de aquecimento do boiler:
                 self.SPTq = round((action[1] * np.std([30, 70])) + np.mean([30, 70]), 1)
+                if self.SPTq > 70:
+                    self.SPTq = 70
+                if self.SPTq < 30:
+                    self.SPTq = 30
 
                 # Abertura da válvula de saída:
-                self.xs = round((action[2] * np.std([0.1, 0.99])) + np.mean([0.1, 0.99]), 2)
+                self.xs = round((action[2] * np.std([0.01, 0.99])) + np.mean([0.01, 0.99]), 2)
+                if self.xs > 0.99:
+                    self.xs = 0.99
+                if self.xs < 0.01:
+                    self.xs = 0.01
 
                 # Split-range:
                 self.split_range = round((action[3] * np.std([0, 1])) + np.mean([0, 1]))      
+                if self.split_range > 1:
+                    self.split_range = 1
+                if self.split_range < 0:
+                    self.split_range = 0
 
         else:
             if self.nome_algoritmo == "proximal_policy_optimization":
@@ -708,12 +736,25 @@ avalia = False
 if treina:
 
     # Treina cada concept:
-    banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
-    banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
-    banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
-    banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
-    banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
-    banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
+    # banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
+    # banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
+    # banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
+    # banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
+    # banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
+    # banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
+
+    # Local onde os modelos foram salvos:
+    path_root_models = "/models/"
+    path_root = os.getcwd() + path_root_models
+    path = path_root + "results_" + nome_algoritmo + "_concept_"
+
+    banho_dia_frio = path + "banho_dia_frio"
+    banho_noite_fria = path + "banho_noite_fria"
+    banho_dia_ameno = path + "banho_dia_ameno"
+    banho_noite_amena = path + "banho_noite_amena"
+    banho_dia_quente = path + "banho_dia_quente"
+    banho_noite_quente = path + "banho_noite_quente"
+    selector_path = path + "seleciona_banho"
 
     model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
 
