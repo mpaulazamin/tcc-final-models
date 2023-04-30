@@ -1,4 +1,4 @@
-## Single concept - RL como ferramenta da camada RTO
+## Single concept - RL como ferramenta da camada RTO com diversos cenários
 
 Modelo com malha de inventário para o nível do tanque e com controle liga-desliga do boiler. Com malha cascata, sem split-range.
 
@@ -28,10 +28,14 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 - Fd: 0
 - Td: 25
 - Tf: 25
-- Tinf: 25
-- custo_eletrico: 2
 - custo_gas: 3
 - custo_agua: 4
+
+### Temperatura ambiente e tarifa da energia elétrica
+
+- Foram selecionados aleatoriamente no reset de cada episódio
+- Tinf: 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+- custo_eletrico_kwh: R$1,00, R$1,25, R$1,50, R$1,75, R$2,00, 2,25
 
 ### Episódios
 
@@ -39,12 +43,10 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 - Tempo total de cada episódio: 14 minutos
 - 7 ações em cada episódio
 - PPO: 100 steps no PPO, totalizando 400000 episódios
-- SAC: a decidir
 
 ### Parâmetros
 
 - PPO: Parâmetros default 
-- SAC: Parâmetros default 
 
 ### Recompensa
 
