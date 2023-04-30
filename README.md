@@ -9,7 +9,7 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 - SPTs: 30 a 40 - contínuo
 - SPTq: 30 a 70 - contínuo
 - xs: 0.01 a 0.99 - contínuo
-- split_range: 0 a 1 - discreto para PPO e contínuo para SAC
+- split_range: 0 a 1 - discreto
 
 ### Espaço de estados
 
