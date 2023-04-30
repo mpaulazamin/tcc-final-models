@@ -37,9 +37,9 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 
 ### Temperatura ambiente e tarifa da energia elétrica
 
-- Foram selecionados aleatoriamente no reset de cada episódio
+- Foram selecionados aleatoriamente no reset de cada episódio.
 - Tinf: 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
-- custo_eletrico_kwh: R$1,00, R$1,25, R$1,50, R$1,75, R$2,00, 2,25
+- custo_eletrico_kwh: R$1,00, R$1,25, R$1,50, R$1,75, R$2,00, R$2,25
 
 ### Episódios
 
