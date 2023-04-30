@@ -735,23 +735,23 @@ avalia = False
 if treina:
 
     # Treina cada concept:
-    banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
-    banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
-    banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
-    banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
-    banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
-    banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
+    # banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
+    # banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
+    # banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
+    # banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
+    # banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
+    # banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
 
-    # path_root_models = "/models/"
-    # path_root = os.getcwd() + path_root_models
-    # path = path_root + "results_" + nome_algoritmo + "_concept_"
+    path_root_models = "/models/"
+    path_root = os.getcwd() + path_root_models
+    path = path_root + "results_" + nome_algoritmo + "_concept_"
 
-    # banho_dia_frio = path + "banho_dia_frio"
-    # banho_noite_fria = path + "banho_noite_fria"
-    # banho_dia_ameno = path + "banho_dia_ameno"
-    # banho_noite_amena = path + "banho_noite_amena"
-    # banho_dia_quente = path + "banho_dia_quente"
-    # banho_noite_quente = path + "banho_noite_quente"
+    banho_dia_frio = path + "banho_dia_frio"
+    banho_noite_fria = path + "banho_noite_fria"
+    banho_dia_ameno = path + "banho_dia_ameno"
+    banho_noite_amena = path + "banho_noite_amena"
+    banho_dia_quente = path + "banho_dia_quente"
+    banho_noite_quente = path + "banho_noite_quente"
 
     model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
 
