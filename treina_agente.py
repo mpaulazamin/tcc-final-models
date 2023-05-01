@@ -94,8 +94,10 @@ class ShowerEnv(gym.Env):
     def reset(self):
         
         # Temperatura ambiente e custo da energia elétrica em kWh:
-        self.Tinf = random.choice(self.Tinf_list)
-        self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
+        # self.Tinf = random.choice(self.Tinf_list)
+        # self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
+        self.Tinf = 15
+        self.custo_eletrico_kwh = 2.25
 
         # Distúrbios Fd e Td, temperatura da corrente fria Tf:
         self.Fd = 0
@@ -727,7 +729,7 @@ n_iter_checkpoints = 10
 # n_iter_checkpoints = 100
 
 # Treina e avalia o agente:
-treina = True
+treina = False
 avalia = True
 
 if treina:
@@ -753,7 +755,7 @@ if treina:
 if avalia:
 
     # Define o concept e o selector:
-    concept = "banho_dia_quente"
+    concept = "banho_noite_fria"
     selector = True
 
     avalia_agente(nome_algoritmo, concept, selector)
