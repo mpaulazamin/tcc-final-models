@@ -1,5 +1,6 @@
 Tinf = 15
 custo_eletrico_kwh = 2.25
+custo_gas_kg = 3
 
 Episódio 0.
 Iteração: 1

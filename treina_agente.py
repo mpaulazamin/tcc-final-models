@@ -51,7 +51,7 @@ class ShowerEnv(gym.Env):
         self.potencia_aquecedor = 29000
 
         # Custo do kg do gás e do m3 da água:
-        self.custo_gas_kg = 3
+        self.custo_gas_kg = 2
         self.custo_agua_m3 = 4
 
         # Concept selector seleciona qual concept treinado será utilizado:
@@ -662,7 +662,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     ax[1, 1].set_xlabel("Tempo em minutos")
     ax[1, 1].set_ylabel("Fração")
     ax[1, 1].legend()
-    plt.savefig(path_imagens + "resultado1_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado1_v2_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -679,7 +679,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     ax[1].set_xlabel("Tempo em minutos")
     ax[1].set_ylabel("Vazão em litros/minutos")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado2_v2_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -694,7 +694,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     ax[1].set_xlabel("Ação")
     ax[1].set_ylabel("Índice")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado3_v2_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -713,7 +713,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     ax[1].set_xlabel("Ação")
     ax[1].set_ylabel("Custos em reais")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado4_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado4_v2_" + nome_algoritmo + ".png", dpi=200)
     # plt.show()
 
 
