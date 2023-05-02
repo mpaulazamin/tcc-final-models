@@ -80,10 +80,10 @@ class ShowerEnv(gym.Env):
     def reset(self):
         
         # Temperatura ambiente e custo da energia elétrica em kWh:
-        # self.Tinf = random.choice(self.Tinf_list)
-        # self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
-        self.Tinf = 15
-        self.custo_eletrico_kwh = 2.25
+        self.Tinf = random.choice(self.Tinf_list)
+        self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
+        # self.Tinf = 15
+        # self.custo_eletrico_kwh = 2.25
 
         # Distúrbios Fd e Td, temperatura da corrente fria Tf:
         self.Fd = 0
@@ -305,7 +305,7 @@ class ShowerEnv(gym.Env):
 def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf_list, custo_eletrico_kwh_list):
 
     # Define o local para salvar o modelo treinado e os checkpoints:
-    path_root_models = "/models/"
+    path_root_models = "/models_v2/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -357,7 +357,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf_list, 
 def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
 
     # Define o local do checkpoint salvo:
-    path_root_models = "/models/"
+    path_root_models = "/models_v2/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -470,7 +470,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
 
     # Gráficos:
     sns.set_style("darkgrid")
-    path_imagens = os.getcwd() + "/imagens/"
+    path_imagens = os.getcwd() + "/models_v2/"
 
     fig, ax = plt.subplots(2, 2, figsize=(20, 17))
     ax[0, 0].plot(tempo_total, SPTs, label="Ação - setpoint da temperatura de saída (SPTs)", color="navy", linestyle="dashed")
@@ -563,7 +563,7 @@ ray.init()
 
 # Define variáveis:
 nome_algoritmo = "proximal_policy_optimization"
-n_iter_agente = 101
+n_iter_agente = 151
 n_iter_checkpoints = 10
 
 # nome_algoritmo = "soft_actor_critic"
@@ -574,7 +574,7 @@ Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
 # Treina e avalia o agente:
-treina = False
+treina = True
 avalia = True
 
 if treina:
