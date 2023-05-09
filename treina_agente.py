@@ -94,10 +94,8 @@ class ShowerEnv(gym.Env):
     def reset(self):
         
         # Temperatura ambiente e custo da energia elétrica em kWh:
-        # self.Tinf = random.choice(self.Tinf_list)
-        # self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
-        self.Tinf = 15
-        self.custo_eletrico_kwh = 2.25
+        self.Tinf = random.choice(self.Tinf_list)
+        self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
 
         # Distúrbios Fd e Td, temperatura da corrente fria Tf:
         self.Fd = 0
@@ -413,7 +411,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, concept, se
         Tinf_list = [25, 26, 27, 28, 29, 30]
         custo_eletrico_kwh_list = [1.75, 2, 2.25]
 
-    if concept == "seleciona_banho":
+    if concept == "seleciona_banho2":
         Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
         custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
@@ -481,7 +479,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     banho_noite_amena = path + "banho_noite_amena"
     banho_dia_quente = path + "banho_dia_quente"
     banho_noite_quente = path + "banho_noite_quente"
-    selector_path = path + "seleciona_banho"
+    selector_path = path + "seleciona_banho2"
 
     model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
 
@@ -510,7 +508,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
         Tinf_list = [25, 26, 27, 28, 29, 30]
         custo_eletrico_kwh_list = [1.75, 2, 2.25]
 
-    if concept == "seleciona_banho":
+    if concept == "seleciona_banho2":
         Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
         custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
@@ -723,8 +721,8 @@ ray.init()
 
 # Define variáveis:
 nome_algoritmo = "proximal_policy_optimization"
-n_iter_agente = 101
-n_iter_checkpoints = 10
+n_iter_agente = 11
+n_iter_checkpoints = 5
 
 # nome_algoritmo = "soft_actor_critic"
 # n_iter_agente = 1001
@@ -761,14 +759,14 @@ if treina:
     selector = treina_agente(nome_algoritmo, 
         n_iter_agente, 
         n_iter_checkpoints,
-        "seleciona_banho", 
+        "seleciona_banho2", 
         True, 
         model)
 
 if avalia:
 
     # Define o concept e o selector:
-    concept = "banho_noite_fria"
+    concept = "banho_noite_quente"
     selector = True
 
     avalia_agente(nome_algoritmo, concept, selector)
