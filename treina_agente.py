@@ -56,7 +56,7 @@ class ShowerEnv(gym.Env):
 
         # Concept selector seleciona qual concept treinado será utilizado:
         if self.selector == True:
-            self.action_space = gym.spaces.Discrete(6)
+            self.action_space = gym.spaces.Discrete(3)
             self.models = []
 
             for i in self.model:
@@ -389,29 +389,29 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, concept, se
     # Define os concepts:
     if concept == "banho_dia_frio":
         Tinf_list = [15, 16, 17, 18, 19]
-        custo_eletrico_kwh_list = [1, 1.25, 1.5]
+        custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
-    if concept == "banho_noite_fria":
-        Tinf_list = [15, 16, 17, 18, 19]
-        custo_eletrico_kwh_list = [1.75, 2, 2.25]
+    # if concept == "banho_noite_fria":
+    #     Tinf_list = [15, 16, 17, 18, 19]
+    #     custo_eletrico_kwh_list = [1.75, 2, 2.25]
 
     if concept == "banho_dia_ameno":
         Tinf_list = [20, 21, 22, 23, 24]
-        custo_eletrico_kwh_list = [1, 1.25, 1.5]
+        custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
-    if concept == "banho_noite_amena":
-        Tinf_list = [20, 21, 22, 23, 24]
-        custo_eletrico_kwh_list = [1.75, 2, 2.25]
+    # if concept == "banho_noite_amena":
+    #     Tinf_list = [20, 21, 22, 23, 24]
+    #     custo_eletrico_kwh_list = [1.75, 2, 2.25]
 
     if concept == "banho_dia_quente":
         Tinf_list = [25, 26, 27, 28, 29, 30]
-        custo_eletrico_kwh_list = [1, 1.25, 1.5]
+        custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
-    if concept == "banho_noite_quente":
-        Tinf_list = [25, 26, 27, 28, 29, 30]
-        custo_eletrico_kwh_list = [1.75, 2, 2.25]
+    # if concept == "banho_noite_quente":
+    #     Tinf_list = [25, 26, 27, 28, 29, 30]
+    #     custo_eletrico_kwh_list = [1.75, 2, 2.25]
 
-    if concept == "seleciona_banho":
+    if concept == "seleciona_banho_v2":
         Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
         custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
@@ -474,41 +474,42 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     path = path_root + "results_" + nome_algoritmo + "_concept_"
 
     banho_dia_frio = path + "banho_dia_frio"
-    banho_noite_fria = path + "banho_noite_fria"
+    # banho_noite_fria = path + "banho_noite_fria"
     banho_dia_ameno = path + "banho_dia_ameno"
-    banho_noite_amena = path + "banho_noite_amena"
+    # banho_noite_amena = path + "banho_noite_amena"
     banho_dia_quente = path + "banho_dia_quente"
-    banho_noite_quente = path + "banho_noite_quente"
-    selector_path = path + "seleciona_banho"
+    # banho_noite_quente = path + "banho_noite_quente"
+    selector_path = path + "seleciona_banho_v2"
 
-    model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    # model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    model = [banho_dia_frio, banho_dia_ameno, banho_dia_quente]
 
     # Define os concepts:
     if concept == "banho_dia_frio":
         Tinf_list = [15, 16, 17, 18, 19]
-        custo_eletrico_kwh_list = [1, 1.25, 1.5]
+        custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
-    if concept == "banho_noite_fria":
-        Tinf_list = [15, 16, 17, 18, 19]
-        custo_eletrico_kwh_list = [1.75, 2, 2.25]
+    # if concept == "banho_noite_fria":
+    #     Tinf_list = [15, 16, 17, 18, 19]
+    #     custo_eletrico_kwh_list = [1.75, 2, 2.25]
 
     if concept == "banho_dia_ameno":
         Tinf_list = [20, 21, 22, 23, 24]
-        custo_eletrico_kwh_list = [1, 1.25, 1.5]
+        custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
-    if concept == "banho_noite_amena":
-        Tinf_list = [20, 21, 22, 23, 24]
-        custo_eletrico_kwh_list = [1.75, 2, 2.25]
+    # if concept == "banho_noite_amena":
+    #     Tinf_list = [20, 21, 22, 23, 24]
+    #     custo_eletrico_kwh_list = [1.75, 2, 2.25]
 
     if concept == "banho_dia_quente":
         Tinf_list = [25, 26, 27, 28, 29, 30]
-        custo_eletrico_kwh_list = [1, 1.25, 1.5]
+        custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
-    if concept == "banho_noite_quente":
-        Tinf_list = [25, 26, 27, 28, 29, 30]
-        custo_eletrico_kwh_list = [1.75, 2, 2.25]
+    # if concept == "banho_noite_quente":
+    #     Tinf_list = [25, 26, 27, 28, 29, 30]
+    #     custo_eletrico_kwh_list = [1.75, 2, 2.25]
 
-    if concept == "seleciona_banho":
+    if concept == "seleciona_banho_v2":
         Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
         custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
@@ -729,26 +730,40 @@ n_iter_checkpoints = 10
 # n_iter_checkpoints = 100
 
 # Treina e avalia o agente:
-treina = False
-avalia = True
+treina = True
+avalia = False
 
 if treina:
 
     # Treina cada concept:
-    banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
-    banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
-    banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
-    banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
-    banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
-    banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
+    # banho_dia_frio = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_frio")
+    # banho_noite_fria = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_fria")
+    # banho_dia_ameno = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_ameno")
+    # banho_noite_amena = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_amena")
+    # banho_dia_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_dia_quente")
+    # banho_noite_quente = treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, "banho_noite_quente")
 
-    model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    # model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+
+    path_root_models = "/models/"
+    path_root = os.getcwd() + path_root_models
+    path = path_root + "results_" + nome_algoritmo + "_concept_"
+
+    banho_dia_frio = path + "banho_dia_frio"
+    # banho_noite_fria = path + "banho_noite_fria"
+    banho_dia_ameno = path + "banho_dia_ameno"
+    # banho_noite_amena = path + "banho_noite_amena"
+    banho_dia_quente = path + "banho_dia_quente"
+    # banho_noite_quente = path + "banho_noite_quente"
+
+    # model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    model = [banho_dia_frio, banho_dia_ameno, banho_dia_quente]
 
     # Treina o selector:
     selector = treina_agente(nome_algoritmo, 
         n_iter_agente, 
         n_iter_checkpoints,
-        "seleciona_banho", 
+        "seleciona_banho_v2", 
         True, 
         model)
 
