@@ -1,0 +1,49 @@
+Banho noite quente
+
+Episódio 0.
+Iteração: 1
+Ação (número do concept selecionado): 2
+Estados: [3.8631027e+01 6.4440269e+01 3.9863670e+01 7.8177315e+01 9.3799753e+00
+ 9.0261823e-01 9.9999998e-03 4.9798030e-01 3.0000000e+01 2.0000000e+00
+ 2.1633333e-01 1.3615602e-01 7.5039804e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 2
+Recompensa: 1.8460390043988746.
+
+Iteração: 2
+Ação (número do concept selecionado): 5
+Estados: [3.8421471e+01 5.9477135e+01 4.0029388e+01 8.0059441e+01 2.9033618e+00
+ 1.7451471e-01 1.4200851e-01 9.2563641e-01 3.0000000e+01 2.0000000e+00
+ 3.6666666e-03 2.2624113e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 2
+Recompensa: 4.57499759635646.
+
+Iteração: 3
+Ação (número do concept selecionado): 5
+Estados: [3.8475609e+01 6.1187572e+01 4.0015965e+01 8.0002869e+01 2.9033618e+00
+ 1.8670489e-01 1.3269818e-01 9.1329199e-01 3.0000000e+01 2.0000000e+00
+ 3.6666666e-03 1.8510638e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 2
+Recompensa: 4.517389034243355.
+
+Iteração: 4
+Ação (número do concept selecionado): 5
+Estados: [3.8461807e+01 6.4994286e+01 4.0007484e+01 8.0002892e+01 2.9033618e+00
+ 1.8479811e-01 1.3481821e-01 9.1654825e-01 3.0000000e+01 2.0000000e+00
+ 3.6666666e-03 2.0156028e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 2
+Recompensa: 4.532024983790338.
+
+Iteração: 5
+Ação (número do concept selecionado): 5
+Estados: [3.8451271e+01 6.0820374e+01 4.0000587e+01 8.0002686e+01 2.9033618e+00
+ 1.8395980e-01 1.3503818e-01 9.1898459e-01 3.0000000e+01 2.0000000e+00
+ 3.6666666e-03 1.8099291e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 2
+Recompensa: 4.546263304242243.
+
+Recompensa total: 29.104564036675296
