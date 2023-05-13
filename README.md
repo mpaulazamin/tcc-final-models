@@ -88,4 +88,5 @@ recompensa = iqb
 
 ### Resultados
 
-TBD
+- Havia rodado o selector com 6 concepts, mas nesse caso não faz sentido pois o custo da energia elétrica não é otimizado. Logo, estou rodando novamente o concept `seleciona_banho_v2` com somente 3 concepts (`banho_dia_frio`, `banho_dia_ameno`, `banho_dia_quente`).
+- Talvez eu precise renomear os concepts para algo como `banho_temperatura_fria_energia_barata`.
