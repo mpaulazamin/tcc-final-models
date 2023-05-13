@@ -62,4 +62,4 @@ recompensa = 5 * iqb - 2 * custo_eletrico - custo_gas - custo_agua
 
 ### Resultados
 
-TBD
+- A pasta models_v2 contém o agente treinado com 150 steps
