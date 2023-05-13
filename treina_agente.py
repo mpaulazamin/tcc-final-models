@@ -760,7 +760,7 @@ if treina:
     selector = treina_agente(nome_algoritmo, 
         n_iter_agente, 
         n_iter_checkpoints,
-        "seleciona_banho", 
+        "seleciona_banho_v2", 
         True, 
         model)
 
