@@ -26,9 +26,9 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 ### Variáveis fixas
 
 - Fd: 0
-- Td: 25
-- Tf: 25
-- Tinf: 25
+- Td: 15, 20, 25 e 30
+- Tf: 15, 20, 25 e 30
+- Tinf: 15, 20, 25 e 30
 - custo_eletrico: 2
 - custo_gas: 3
 - custo_agua: 4
@@ -39,7 +39,7 @@ Modelo com malha de inventário para o nível do tanque e com controle liga-desl
 - Tempo total de cada episódio: 14 minutos
 - 7 ações em cada episódio
 - PPO: 100 steps no PPO, totalizando 400000 episódios
-- SAC: a decidir
+- SAC: 1000 steps, totalizando 100000 episódios
 
 ### Parâmetros
 
