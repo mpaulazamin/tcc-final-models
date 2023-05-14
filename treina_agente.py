@@ -306,7 +306,7 @@ class ShowerEnv(gym.Env):
 def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 
     # Define o local para salvar o modelo treinado e os checkpoints:
-    path_root_models = "/models/"
+    path_root_models = "/models_Tinf20/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -358,7 +358,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf):
 def avalia_agente(nome_algoritmo, Tinf):
 
     # Define o local do checkpoint salvo:
-    path_root_models = "/models/"
+    path_root_models = "/models_Tinf20/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -467,7 +467,7 @@ def avalia_agente(nome_algoritmo, Tinf):
 
     # Gráficos:
     sns.set_style("darkgrid")
-    path_imagens = os.getcwd() + "/imagens/"
+    path_imagens = os.getcwd() + "/imagens_Tinf20/"
 
     fig, ax = plt.subplots(2, 2, figsize=(20, 17))
     ax[0, 0].plot(tempo_total, SPTs, label="Ação - setpoint da temperatura de saída (SPTs)", color="navy", linestyle="dashed")
@@ -550,15 +550,15 @@ ray.shutdown()
 ray.init()
 
 # Define variáveis:
-# nome_algoritmo = "proximal_policy_optimization"
-# n_iter_agente = 101
-# n_iter_checkpoints = 10
-# Tinf = 25
+nome_algoritmo = "proximal_policy_optimization"
+n_iter_agente = 101
+n_iter_checkpoints = 10
+Tinf = 20
 
-nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 1001
-n_iter_checkpoints = 100
-Tinf = 25
+# nome_algoritmo = "soft_actor_critic"
+# n_iter_agente = 1001
+# n_iter_checkpoints = 100
+# Tinf = 25
 
 # Treina e avalia o agente:
 treina = True
