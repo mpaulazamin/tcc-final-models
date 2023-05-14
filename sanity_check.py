@@ -2,6 +2,9 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+
+from itertools import accumulate
 
 from controle_temperatura_saida import simulacao_malha_temperatura
 from controle_temperatura_saida import modelagem_sistema
@@ -40,9 +43,9 @@ class ShowerEnv():
         self.potencia_aquecedor = 29000
 
         # Custo da energia elétrica em kWh, do kg do gás, e do m3 da água:
-        self.custo_eletrico_kwh = 2
-        self.custo_gas_kg = 1
-        self.custo_agua_m3 = 3
+        self.custo_eletrico_kwh = 1.5
+        self.custo_gas_kg = 3
+        self.custo_agua_m3 = 4
 
         # Fração da resistência elétrica:
         self.Sr = 0
@@ -97,8 +100,8 @@ class ShowerEnv():
         self.I_buffer = self.Kp * self.Y0[id] * (1 - self.b)
         self.D_buffer = np.array([0, 0, 0, 0])  
 
-        # Estados - Ts, Tq, Tt, h, Fs, xq, xf, iqb:
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xq, self.xf, self.iqb],
+        # Estados - Ts, Tq, Tt, h, Fs, xq, xf, iqb, Tinf:
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xq, self.xf, self.iqb, self.Tinf],
                              dtype=np.float32)
         
         return self.obs
@@ -120,14 +123,13 @@ class ShowerEnv():
         # Split-range:
         self.split_range = action[3]
 
-        # Variáveis para simulação - tempo, SPTq, SPh, xq, xs,Tf, Td, Tinf, Fd, Sr:
+        # Variáveis para simulação - tempo, SPTq, SPh, SPTs, xs, Tf, Td, Tinf, Fd, Sr:
         self.UT = np.array(
             [   
                 [self.tempo_inicial, self.SPTq, self.SPh, self.SPTs, self.xs, self.Tf, self.Td, self.Tinf, self.Fd, self.Sr],
                 [self.tempo_final, self.SPTq, self.SPh, self.SPTs, self.xs, self.Tf, self.Td, self.Tinf, self.Fd, self.Sr]
             ]
         )
-        print(self.UT)
 
         # Solução do sistema:
         self.TT, self.YY, self.UU, self.Y0, self.I_buffer, self.D_buffer = simulacao_malha_temperatura(
@@ -183,8 +185,8 @@ class ShowerEnv():
         # Cálculo do custo da água:
         self.custo_agua = custo_agua_banho(self.Fs, self.custo_agua_m3, self.tempo_iteracao)
 
-        # Estados - Ts, Tq, Tt, h, Fs, xq, xf, iqb, custo_eletrico, custo_gas, custo_agua:
-        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xq, self.xf, self.iqb],
+        # Estados - Ts, Tq, Tt, h, Fs, xq, xf, iqb, Tinf:
+        self.obs = np.array([self.Ts, self.Tq, self.Tt, self.h, self.Fs, self.xq, self.xf, self.iqb, self.Tinf],
                              dtype=np.float32)
 
         # Define a recompensa:
@@ -214,6 +216,7 @@ class ShowerEnv():
         self.Td_total = np.repeat(self.Td, 201) 
         self.Tf_total = np.repeat(self.Tf, 201) 
         self.Tinf_total = np.repeat(self.Tinf, 201) 
+        self.split_range_total = np.repeat(self.split_range, 201)
 
         info = {"SPTq": self.SPTq_total,
                 "Tq": self.Tq_total,
@@ -235,7 +238,8 @@ class ShowerEnv():
                 "Fd": self.Fd_total,
                 "Td": self.Td_total,
                 "Tf": self.Tf_total,
-                "Tinf": self.Tinf_total}
+                "Tinf": self.Tinf_total,
+                "split_range": self.split_range_total,}
 
         return self.obs, reward, done, info
     
@@ -263,6 +267,7 @@ h_list = []
 Tt_list = []
 SPTs_list = []
 Ts_list = []
+split_range_list = []
 Sr_list = []
 Sa_list = []
 xq_list = []
@@ -277,8 +282,8 @@ Fd_list = []
 Td_list = []
 Tf_list = []
 Tinf_list = []
-time_total = np.arange(start=0, stop=14 + 0.07, step=0.01, dtype="float")
-time_actions = np.arange(start=1, stop=8, step=1, dtype="int")
+tempo_total = np.arange(start=0, stop=14 + 0.07, step=0.01, dtype="float")
+tempo_acoes = np.arange(start=1, stop=8, step=1, dtype="int")
 
 obs = env.reset()
 for action in actions:
@@ -288,28 +293,34 @@ for action in actions:
     print(f"Recompensa: {reward}")
     print("")
 
-    # Para visualização:
-    SPTq_list.append(info.get("SPTq"))
-    Tq_list.append(info.get("Tq"))
-    SPh_list.append(info.get("SPh"))
-    h_list.append(info.get("h"))
-    Tt_list.append(info.get("Tt"))
-    SPTs_list.append(info.get("SPTs"))
-    Ts_list.append(info.get("Ts"))
-    Sr_list.append(info.get("Sr"))
-    Sa_list.append(info.get("Sa"))
-    xq_list.append(info.get("xq"))
-    xf_list.append(info.get("xf"))
-    xs_list.append(info.get("xs"))
-    Fs_list.append(info.get("Fs"))
-    iqb_list.append(info.get("iqb"))
-    custo_eletrico_list.append(info.get("custo_eletrico"))
-    custo_gas_list.append(info.get("custo_gas"))
-    custo_agua_list.append(info.get("custo_agua"))
-    Fd_list.append(info.get("Fd"))
-    Td_list.append(info.get("Td"))
-    Tf_list.append(info.get("Tf"))
-    Tinf_list.append(info.get("Tinf"))
+# Para visualização:
+SPTq_list.append(info.get("SPTq"))
+Tq_list.append(info.get("Tq"))
+SPh_list.append(info.get("SPh"))
+h_list.append(info.get("h"))
+Tt_list.append(info.get("Tt"))
+SPTs_list.append(info.get("SPTs"))
+Ts_list.append(info.get("Ts"))
+Sr_list.append(info.get("Sr"))
+Sa_list.append(info.get("Sa"))
+xq_list.append(info.get("xq"))
+xf_list.append(info.get("xf"))
+xs_list.append(info.get("xs"))
+Fs_list.append(info.get("Fs"))
+iqb_list.append(info.get("iqb"))
+custo_eletrico_list.append(info.get("custo_eletrico"))
+custo_gas_list.append(info.get("custo_gas"))
+custo_agua_list.append(info.get("custo_agua"))
+Fd_list.append(info.get("Fd"))
+Td_list.append(info.get("Td"))
+Tf_list.append(info.get("Tf"))
+Tinf_list.append(info.get("Tinf"))
+split_range_list.append(info.get("split_range"))
+
+# Custos cumulativos:
+custo_eletrico_list_acumulado = list(accumulate(custo_eletrico_list))
+custo_gas_list_acumulado = list(accumulate(custo_gas_list))
+custo_agua_list_acumulado = list(accumulate(custo_agua_list))
 
 # Para visualização:
 SPTq = np.concatenate(SPTq_list, axis=0)
@@ -329,74 +340,84 @@ Fd = np.concatenate(Fd_list, axis=0)
 Td = np.concatenate(Td_list, axis=0)
 Tf = np.concatenate(Tf_list, axis=0)
 Tinf = np.concatenate(Tinf_list, axis=0)
+split_range = np.concatenate(split_range_list, axis=0)
 
 # Gráficos:
 sns.set_style("darkgrid")
-fig, ax = plt.subplots(3, 3, figsize=(20, 17))
+path_imagens = os.getcwd() + "/imagens/"
 
-ax[0, 0].plot(time_total, SPTs, label="SPTs", color="navy", linestyle="dashed")
-ax[0, 0].plot(time_total, Ts, label="Ts", color="royalblue", linestyle="solid")
-ax[0, 0].plot(time_total, Tt, label="Tt", color="deepskyblue", linestyle="solid")
-# ax[0, 0].set_title("Temperaturas de saída (Ts) e do tanque (Tt)")
-ax[0, 0].set_xlabel("Tempo")
-ax[0, 0].set_ylabel("Temperatura")
+fig, ax = plt.subplots(2, 2, figsize=(20, 17))
+ax[0, 0].plot(tempo_total, SPTs, label="Ação - setpoint da temperatura de saída (SPTs)", color="navy", linestyle="dashed")
+ax[0, 0].plot(tempo_total, Ts, label="Temperatura de saída (Ts)", color="royalblue", linestyle="solid")
+ax[0, 0].plot(tempo_total, Tt, label="Temperatura do tanque (Tt)", color="deepskyblue", linestyle="solid")
+ax[0, 0].set_title("Temperaturas de saída (Ts) e do tanque (Tt)")
+ax[0, 0].set_xlabel("Tempo em minutos")
+ax[0, 0].set_ylabel("Temperatura em °C")
 ax[0, 0].legend()
 
-ax[0, 1].plot(time_total, SPTq, label="SPTq", color="purple", linestyle="dashed")
-ax[0, 1].plot(time_total, Tq, label="Tq", color="mediumorchid", linestyle="solid")
-# ax[0, 1].set_title("Temperatura do boiler (Tq)")
-ax[0, 1].set_xlabel("Tempo")
-ax[0, 1].set_ylabel("Temperatura")
+ax[0, 1].plot(tempo_total, SPTq, label="Ação - setpoint da temperatura do boiler (SPTq)", color="purple", linestyle="dashed")
+ax[0, 1].plot(tempo_total, Tq, label="Temperatura do boiler (Tq)", color="mediumorchid", linestyle="solid")
+ax[0, 1].set_title("Temperatura do boiler (Tq)")
+ax[0, 1].set_xlabel("Tempo em minutos")
+ax[0, 1].set_ylabel("Temperatura °C")
 ax[0, 1].legend()
 
-ax[0, 2].plot(time_actions, iqb_list, label="IQB", color="black", linestyle="solid")
-# ax[0, 2].set_title("Qualidade do banho (IQB)")
-ax[0, 2].set_xlabel("Ações")
-ax[0, 2].set_ylabel("Índice final")
-ax[0, 2].legend()
-
-ax[1, 0].plot(time_total, SPh, label="SPh", color="darkslategray", linestyle="dashed")
-ax[1, 0].plot(time_total, h, label="h", color="teal", linestyle="solid")
-# ax[1, 0].set_title("Nível do tanque (h)")
-ax[1, 0].set_xlabel("Tempo")
-ax[1, 0].set_ylabel("Nível")
+ax[1, 0].plot(tempo_total, xq, label="Abertura da válvula quente (xq)", color="darkmagenta", linestyle="solid")
+ax[1, 0].plot(tempo_total, xf, label="Abertura da válvula fria (xf)", color="deeppink", linestyle="solid")
+ax[1, 0].plot(tempo_total, xs, label="Ação - abertura da válvula de saída (xs)", color="palevioletred", linestyle="solid")
+ax[1, 0].set_title("Aberturas das válvulas quente (xq), fria (xf) e de saída (xs)")
+ax[1, 0].set_xlabel("Tempo em minutos")
+ax[1, 0].set_ylabel("Abertura")
 ax[1, 0].legend()
 
-ax[1, 1].plot(time_total, xq, label="xq", color="darkmagenta", linestyle="solid")
-ax[1, 1].plot(time_total, xf, label="xf", color="deeppink", linestyle="solid")
-ax[1, 1].plot(time_total, xs, label="xs", color="palevioletred", linestyle="solid")
-# ax[1, 1].set_title("Aberturas das válvulas quente (xq), fria (xf) e de saída (xs)")
-ax[1, 1].set_xlabel("Tempo")
-ax[1, 1].set_ylabel("Abertura")
+ax[1, 1].plot(tempo_total, Sa, label="Fração de aquecimento do boiler (Sa)", color="skyblue", linestyle="solid")
+ax[1, 1].plot(tempo_total, Sr, label="Fração da resistência elétrica (Sr)", color="darkcyan", linestyle="solid")
+ax[1, 1].plot(tempo_total, split_range, label="Ação - split-range", color="black", linestyle="solid")
+ax[1, 1].set_title("Frações da resistência elétrica (Sr) e do aquecimento do boiler (Sa)")
+ax[1, 1].set_xlabel("Tempo em minutos")
+ax[1, 1].set_ylabel("Fração")
 ax[1, 1].legend()
+plt.savefig(path_imagens + "resultado1_com_split_range" + ".png", dpi=200)
+# plt.show()
 
-ax[1, 2].plot(time_actions, custo_eletrico_list, label="Custo elétrico", color="black", linestyle="solid")
-ax[1, 2].plot(time_actions, custo_gas_list, label="Custo do gás", color="gray", linestyle="solid")
-ax[1, 2].plot(time_actions, custo_agua_list, label="Custo da água", color="dodgerblue", linestyle="solid")
-# ax[1, 2].set_title("Custos do banho")
-ax[1, 2].set_xlabel("Ações")
-ax[1, 2].set_ylabel("Custos")
-ax[1, 2].legend()
+fig, ax = plt.subplots(1, 2, figsize=(15, 5))
+ax[0].plot(tempo_total, SPh, label="Setpoint do nível do tanque (SPh)", color="darkslategray", linestyle="dashed")
+ax[0].plot(tempo_total, h, label="Nível do tanque (h)", color="teal", linestyle="solid")
+ax[0].set_title("Nível do tanque (h)")
+ax[0].set_xlabel("Tempo em minutos")
+ax[0].set_ylabel("Nível")
+ax[0].legend()
 
-ax[2, 0].plot(time_total, Sa, label="Sa", color="skyblue", linestyle="solid")
-ax[2, 0].plot(time_total, Sr, label="Sr", color="darkcyan", linestyle="solid")
-# ax[2, 0].set_title("Frações da resistência elétrica (Sr) e do aquecimento do boiler (Sa)")
-ax[2, 0].set_xlabel("Tempo")
-ax[2, 0].set_ylabel("Fração")
-ax[2, 0].legend()
+ax[1].plot(tempo_total, Fs, label="Vazão de saída (Fs)", color="slateblue", linestyle="solid")
+ax[1].plot(tempo_total, Fd, label="Vazão da corrente de distúrbio (Fd)", color="darkorchid", linestyle="solid")
+ax[1].set_title("Vazões de saída (Fs) e de distúrbio (Fd)")
+ax[1].set_xlabel("Tempo em minutos")
+ax[1].set_ylabel("Vazão em litros/minutos")
+ax[1].legend()
+plt.savefig(path_imagens + "resultado2_com_split_range" + ".png", dpi=200)
+# plt.show()
 
-ax[2, 1].plot(time_total, Fs, label="Fs", color="slateblue", linestyle="solid")
-ax[2, 1].plot(time_total, Fd, label="Fd", color="darkorchid", linestyle="solid")
-# ax[2, 1].set_title("Vazões de saída (Fs) e de distúrbio (Fd)")
-ax[2, 1].set_xlabel("Tempo")
-ax[2, 1].set_ylabel("Vazão")
-ax[2, 1].legend()
+fig, ax = plt.subplots(1, 3, figsize=(20, 5))
+ax[0].plot(tempo_acoes, iqb_list, label="IQB", color="crimson", linestyle="solid")
+ax[0].set_title("Índice de qualidade do banho (IQB)")
+ax[0].set_xlabel("Ação")
+ax[0].set_ylabel("Índice")
+ax[0].legend()
 
-ax[2, 2].plot(time_total, Tinf, label="Tinf", color="steelblue", linestyle="solid")
-ax[2, 2].plot(time_total, Tf, label="Tf", color="slategray", linestyle="solid")
-ax[2, 2].plot(time_total, Td, label="Td", color="black", linestyle="solid")
-# ax[2, 2].set_title("Temperaturas ambiente (Tinf), da corrente fria (Tf) e de distúrbio (Td)")
-ax[2, 2].set_xlabel("Tempo")
-ax[2, 2].set_ylabel("Temperatura")
-ax[2, 2].legend()
-plt.show()
+ax[1].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="black", linestyle="solid")
+ax[1].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="gray", linestyle="solid")
+ax[1].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="dodgerblue", linestyle="solid")
+ax[1].set_title("Custos do banho em cada ação")
+ax[1].set_xlabel("Ação")
+ax[1].set_ylabel("Custos em reais")
+ax[1].legend()
+
+ax[2].plot(tempo_acoes, custo_eletrico_list_acumulado, label="Custo elétrico", color="black", linestyle="solid")
+ax[2].plot(tempo_acoes, custo_gas_list_acumulado, label="Custo do gás", color="gray", linestyle="solid")
+ax[2].plot(tempo_acoes, custo_agua_list_acumulado, label="Custo da água", color="dodgerblue", linestyle="solid")
+ax[2].set_title("Custos cumulativos do banho")
+ax[2].set_xlabel("Ação")
+ax[2].set_ylabel("Custos em reais")
+ax[2].legend()
+plt.savefig(path_imagens + "resultado3_com_split_range" + ".png", dpi=200)
+# plt.show()
