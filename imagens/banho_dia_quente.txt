@@ -1,0 +1,65 @@
+Episódio 0.
+Iteração: 1
+Ação (número do concept selecionado): 2
+Estados: [3.8631474e+01 6.6435585e+01 3.9883259e+01 7.8168579e+01 9.2541828e+00
+ 8.9544696e-01 9.9999998e-03 5.0445735e-01 3.0000000e+01 1.0000000e+00
+ 1.1000000e-01 1.3615602e-01 7.4033462e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 2.0920972503985067.
+
+Iteração: 2
+Ação (número do concept selecionado): 5
+Estados: [3.8428814e+01 6.2076775e+01 4.0032295e+01 8.0056190e+01 2.9033618e+00
+ 1.7745185e-01 1.3654695e-01 9.2403007e-01 3.0000000e+01 1.0000000e+00
+ 1.8333333e-03 2.2212766e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 4.571044064131801.
+
+Iteração: 3
+Ação (número do concept selecionado): 5
+Estados: [3.8474949e+01 6.1411137e+01 4.0016174e+01 7.9997490e+01 2.9033618e+00
+ 1.8646544e-01 1.3306366e-01 9.1344935e-01 3.0000000e+01 1.0000000e+00
+ 1.8333333e-03 1.8099291e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 4.522253792190996.
+
+Iteração: 4
+Ação (número do concept selecionado): 5
+Estados: [3.8461998e+01 6.2709705e+01 4.0008011e+01 7.9996262e+01 2.9033618e+00
+ 1.8679988e-01 1.3317204e-01 9.1650373e-01 3.0000000e+01 1.0000000e+00
+ 1.8333333e-03 1.8921986e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 4.536703137715571.
+
+Iteração: 5
+Ação (número do concept selecionado): 5
+Estados: [3.8455215e+01 6.1379875e+01 4.0003220e+01 8.0001122e+01 2.9033618e+00
+ 1.8444699e-01 1.3500690e-01 9.1807729e-01 3.0000000e+01 1.0000000e+00
+ 1.8333333e-03 1.8099291e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 4.545393646131344.
+
+Iteração: 6
+Ação (número do concept selecionado): 5
+Estados: [3.8452454e+01 6.2400078e+01 4.0003578e+01 7.9997452e+01 2.9033618e+00
+ 1.8595152e-01 1.2990971e-01 9.1871345e-01 3.0000000e+01 1.0000000e+00
+ 1.8333333e-03 1.8921986e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 4.547751783090541.
+
+Iteração: 7
+Ação (número do concept selecionado): 5
+Estados: [3.8450787e+01 6.1015968e+01 4.0001453e+01 7.9996475e+01 2.9033618e+00
+ 1.8578701e-01 1.3215332e-01 9.1909504e-01 3.0000000e+01 1.0000000e+00
+ 1.8333333e-03 1.8099291e-02 2.3226894e-02]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 4.55048242430342.
+
+Recompensa total: 29.36572609796218
