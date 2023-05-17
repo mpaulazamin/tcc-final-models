@@ -768,7 +768,7 @@ if treina:
 if avalia:
 
     # Define o concept e o selector:
-    concept = "banho_noite_fria"
+    concept = "banho_dia_quente"
     selector = True
 
     avalia_agente(nome_algoritmo, concept, selector)
