@@ -1,0 +1,58 @@
+Episódio 0.
+Iteração: 1
+Ações: (array([40.], dtype=float32), array([70.], dtype=float32), array([0.66877055], dtype=float32), array([0.7769029], dtype=float32))
+Estados: [3.9031128e+01 7.2003769e+01 3.9926636e+01 7.8201187e+01 9.2541828e+00
+ 9.5271420e-01 9.9999998e-03 4.6709448e-01 3.0000000e+01]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.46709447088788747.
+
+Iteração: 2
+Ações: (array([33.246037], dtype=float32), array([63.880302], dtype=float32), array([0.4480037], dtype=float32), array([0.24438936], dtype=float32))
+Estados: [3.8223331e+01 7.0866158e+01 3.8604694e+01 8.0035286e+01 4.5607553e+00
+ 4.1266957e-01 9.9999998e-03 9.7205770e-01 3.0000000e+01]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.9720576751391845.
+
+Iteração: 3
+Ações: (array([34.439396], dtype=float32), array([46.666153], dtype=float32), array([0.4591596], dtype=float32), array([0.6501475], dtype=float32))
+Estados: [3.8006577e+01 6.9755363e+01 3.9101688e+01 7.9995445e+01 4.8158116e+00
+ 4.4027853e-01 9.9999998e-03 9.7785914e-01 3.0000000e+01]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.9778591439345937.
+
+Iteração: 4
+Ações: (array([30.314451], dtype=float32), array([56.872387], dtype=float32), array([0.42485663], dtype=float32), array([0.5671656], dtype=float32))
+Estados: [3.8157234e+01 6.8665367e+01 3.9620186e+01 8.0022354e+01 3.8164761e+00
+ 3.4349358e-01 9.9999998e-03 1.0000000e+00 3.0000000e+01]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 1.
+
+Iteração: 5
+Ações: (array([38.474773], dtype=float32), array([70.], dtype=float32), array([0.40198076], dtype=float32), array([0.5476841], dtype=float32))
+Estados: [3.8436737e+01 7.0032913e+01 4.0191891e+01 8.0011208e+01 3.3462648e+00
+ 3.0064532e-01 9.9999998e-03 9.4349468e-01 3.0000000e+01]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.9434946920563405.
+
+Iteração: 6
+Ações: (array([30.44783], dtype=float32), array([58.06714], dtype=float32), array([0.44924626], dtype=float32), array([0.22664297], dtype=float32))
+Estados: [3.8639481e+01 6.8942154e+01 3.8961441e+01 7.9973534e+01 4.5607553e+00
+ 4.1764313e-01 9.9999998e-03 8.7224734e-01 3.0000000e+01]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.8722473177129926.
+
+Iteração: 7
+Ações: (array([40.], dtype=float32), array([58.832073], dtype=float32), array([0.39716202], dtype=float32), array([0.749362], dtype=float32))
+Estados: [3.8047760e+01 6.7870872e+01 4.0364422e+01 8.0026237e+01 3.3462648e+00
+ 2.9948381e-01 9.9999998e-03 1.0000000e+00 3.0000000e+01]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 1.
+
+Recompensa total: 6.232753299730999
