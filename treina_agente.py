@@ -302,7 +302,7 @@ class ShowerEnv(gym.Env):
 def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf_list, custo_eletrico_kwh_list):
 
     # Define o local para salvar o modelo treinado e os checkpoints:
-    path_root_models = "/models/"
+    path_root_models = "/models_v2/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -354,7 +354,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf_list, 
 def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
 
     # Define o local do checkpoint salvo:
-    path_root_models = "/models/"
+    path_root_models = "/models_v2/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -564,7 +564,7 @@ ray.init()
 
 # Define variáveis:
 nome_algoritmo = "proximal_policy_optimization"
-n_iter_agente = 101
+n_iter_agente = 151
 n_iter_checkpoints = 10
 
 # nome_algoritmo = "soft_actor_critic"
@@ -576,7 +576,7 @@ custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
 # Treina e avalia o agente:
 treina = True
-avalia = True
+avalia = False
 
 if treina:
     treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf_list, custo_eletrico_kwh_list)
