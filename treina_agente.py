@@ -82,8 +82,8 @@ class ShowerEnv(gym.Env):
         # Temperatura ambiente e custo da energia elétrica em kWh:
         # self.Tinf = random.choice(self.Tinf_list)
         # self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
-        self.Tinf = 30
-        self.custo_eletrico_kwh = 2
+        self.Tinf = 15
+        self.custo_eletrico_kwh = 2.25
 
         # Distúrbios Fd e Td, temperatura da corrente fria Tf:
         self.Fd = 0
@@ -357,7 +357,7 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf_list, 
 def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
 
     # Define o local do checkpoint salvo:
-    path_root_models = "/models_v2/"
+    path_root_models = "/models/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo
 
@@ -503,7 +503,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     ax[1, 1].set_xlabel("Tempo em minutos")
     ax[1, 1].set_ylabel("Fração")
     ax[1, 1].legend()
-    plt.savefig(path_imagens + "resultado1_" + "banho_noite_quente_v2" + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado1_banho_noite_fria" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -520,7 +520,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     ax[1].set_xlabel("Tempo em minutos")
     ax[1].set_ylabel("Vazão em litros/minutos")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado2_" + "banho_noite_quente_v2" + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado2_banho_noite_fria" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -535,7 +535,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     ax[1].set_xlabel("Ação")
     ax[1].set_ylabel("Índice")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado3_" + "banho_noite_quente_v2" + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado3_banho_noite_fria" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -554,7 +554,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     ax[1].set_xlabel("Ação")
     ax[1].set_ylabel("Custos em reais")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado4_" + "banho_noite_quente_v2" + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado4_banho_noite_fria" + ".png", dpi=200)
     # plt.show()
 
 
