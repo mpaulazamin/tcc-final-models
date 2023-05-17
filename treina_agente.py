@@ -83,7 +83,7 @@ class ShowerEnv(gym.Env):
         # self.Tinf = random.choice(self.Tinf_list)
         # self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
         self.Tinf = 30
-        self.custo_eletrico_kwh = 2
+        self.custo_eletrico_kwh = 1
 
         # Distúrbios Fd e Td, temperatura da corrente fria Tf:
         self.Fd = 0
@@ -501,7 +501,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     ax[1, 1].set_xlabel("Tempo em minutos")
     ax[1, 1].set_ylabel("Fração")
     ax[1, 1].legend()
-    plt.savefig(path_imagens + "resultado1_banho_noite_quente" + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado1_banho_dia_quente" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -518,7 +518,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     ax[1].set_xlabel("Tempo em minutos")
     ax[1].set_ylabel("Vazão em litros/minutos")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado2_banho_noite_quente" + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado2_banho_dia_quente" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 1, figsize=(8, 5))
@@ -533,7 +533,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     # ax[1].set_xlabel("Ação")
     # ax[1].set_ylabel("Índice")
     # ax[1].legend()
-    plt.savefig(path_imagens + "resultado3_banho_noite_quente" + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado3_banho_dia_quente" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -552,7 +552,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
     ax[1].set_xlabel("Ação")
     ax[1].set_ylabel("Custos em reais")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado4_banho_noite_quente" + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado4_banho_dia_quente" + ".png", dpi=200)
     # plt.show()
 
 
