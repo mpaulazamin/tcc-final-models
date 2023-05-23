@@ -97,7 +97,7 @@ class ShowerEnv(gym.Env):
         # self.Tinf = random.choice(self.Tinf_list)
         # self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
         self.Tinf = 30
-        self.custo_eletrico_kwh = 2
+        self.custo_eletrico_kwh = 1
 
         # Distúrbios Fd e Td, temperatura da corrente fria Tf:
         self.Fd = 0
