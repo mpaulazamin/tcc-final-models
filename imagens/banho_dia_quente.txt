@@ -1,0 +1,58 @@
+Episódio 0.
+Iteração: 1
+Ação (número do concept selecionado): 0
+Estados: [38.70808    71.08104    39.70209    78.805115    7.5199757   0.6738103
+  0.09875681  0.6125572  30.        ]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.6125571980386478.
+
+Iteração: 2
+Ação (número do concept selecionado): 2
+Estados: [38.478287   64.42148    40.03653    80.023994    3.121114    0.20329145
+  0.13487439  0.9245245  30.        ]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.9245244566485683.
+
+Iteração: 3
+Ação (número do concept selecionado): 2
+Estados: [38.480125   64.503456   40.018227   80.00846     2.9033618   0.18755391
+  0.13158444  0.9122109  30.        ]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.912210885728203.
+
+Iteração: 4
+Ação (número do concept selecionado): 2
+Estados: [38.46362    66.755005   40.009266   80.00089     2.9033618   0.18864915
+  0.13086982  0.9161252  30.        ]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.9161251947043306.
+
+Iteração: 5
+Ação (número do concept selecionado): 2
+Estados: [38.45732    63.845913   40.00409    80.00228     2.9033618   0.18989004
+  0.1291693   0.91759115 30.        ]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.9175911412040724.
+
+Iteração: 6
+Ação (número do concept selecionado): 2
+Estados: [38.452045   63.397583   40.001152   79.99917     2.9033618   0.18851615
+  0.13170415  0.9188064  30.        ]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.9188063810039876.
+
+Iteração: 7
+Ação (número do concept selecionado): 2
+Estados: [38.4503     65.309296   40.001297   80.00132     2.9033618   0.18668453
+  0.13114157  0.91920733 30.        ]
+Temperatura ambiente: 30
+Custo elétrico do kWh: 1
+Recompensa: 0.9192073474588544.
+
+Recompensa total: 6.121022604786664

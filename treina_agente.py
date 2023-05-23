@@ -94,8 +94,10 @@ class ShowerEnv(gym.Env):
     def reset(self):
         
         # Temperatura ambiente e custo da energia elétrica em kWh:
-        self.Tinf = random.choice(self.Tinf_list)
-        self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
+        # self.Tinf = random.choice(self.Tinf_list)
+        # self.custo_eletrico_kwh = random.choice(self.custo_eletrico_kwh_list)
+        self.Tinf = 30
+        self.custo_eletrico_kwh = 1
 
         # Distúrbios Fd e Td, temperatura da corrente fria Tf:
         self.Fd = 0
@@ -659,7 +661,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     ax[1, 1].set_xlabel("Tempo em minutos")
     ax[1, 1].set_ylabel("Fração")
     ax[1, 1].legend()
-    plt.savefig(path_imagens + "resultado1_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado1_" + "banho_dia_quente" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -676,7 +678,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     ax[1].set_xlabel("Tempo em minutos")
     ax[1].set_ylabel("Vazão em litros/minutos")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado2_" + "banho_dia_quente" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 1, figsize=(8, 5))
@@ -691,7 +693,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     # ax[1].set_xlabel("Ação")
     # ax[1].set_ylabel("Índice")
     # ax[1].legend()
-    plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado3_" + "banho_dia_quente" + ".png", dpi=200)
     # plt.show()
 
     fig, ax = plt.subplots(1, 2, figsize=(15, 5))
@@ -710,7 +712,7 @@ def avalia_agente(nome_algoritmo, concept, selector=True):
     ax[1].set_xlabel("Ação")
     ax[1].set_ylabel("Custos em reais")
     ax[1].legend()
-    plt.savefig(path_imagens + "resultado4_" + nome_algoritmo + ".png", dpi=200)
+    plt.savefig(path_imagens + "resultado4_" + "banho_dia_quente" + ".png", dpi=200)
     # plt.show()
 
 
@@ -767,7 +769,7 @@ if treina:
 if avalia:
 
     # Define o concept e o selector:
-    concept = "banho_dia_ameno"
+    concept = "banho_dia_quente"
     selector = True
 
     avalia_agente(nome_algoritmo, concept, selector)
