@@ -474,6 +474,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     fig, ax = plt.subplots(1, 3, figsize=(15, 4))
     ax[0].plot(tempo_total, Ts, label="Ts", color="tab:blue", linestyle="solid")
     ax[0].plot(tempo_total, Tt, label="Tt", color="tab:red", linestyle="solid")
+    ax[0].plot(tempo_total, SPTs, label="SPTs - ação", color="black", linestyle="dashed")
     ax[0].set_title("Setpoint da temperatura de saída (SPTs) e\n temperaturas de saída (Ts) e do tanque (Tt)")
     ax[0].set_xlabel("Tempo em minutos")
     ax[0].set_ylabel("Temperatura em °C")
