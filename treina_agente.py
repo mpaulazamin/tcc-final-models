@@ -610,7 +610,7 @@ if __name__ == "__main__":
 
     if args["avalia"] == "True":
         # Tabela com resultados principais:    
-        df = pd.DataFrame(columns=["Temperatura ambiente", "Tarifa da energia elétrica", "IQB 1", "IQB 2", "IQB 3", "IQB 4", "IQB 5", "IQB 6", "IQB 7", "IQB médio", "IQB total", "Recompensa total", "Custo elétrico total",  "Custo de gás total",  "Custo de água total"])
+        df = pd.DataFrame(columns=["Temperatura ambiente", "Tarifa da energia elétrica", "IQB 1", "IQB 2", "IQB 3", "IQB 4", "IQB 5", "IQB 6", "IQB 7", "IQB médio", "IQB total", "Recompensa total", "Custo elétrico total", "Custo de gás total", "Custo de água total"])
         
         # Cria combinações com todas as temperaturas e tarifa:
         combs = list(itertools.product(map(str, Tinf_list), map(str, custo_eletrico_kwh_list)))
