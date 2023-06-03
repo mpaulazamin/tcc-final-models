@@ -363,7 +363,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     path = path_root + "results_" + nome_algoritmo
 
     # Carrega o agente treinado:
-    agent = Algorithm.from_checkpoint(glob.glob(path +"/*")[-5])
+    agent = Algorithm.from_checkpoint(glob.glob(path +"/*")[-1])
 
     # Constrói o ambiente:
     env = ShowerEnv({"Tinf": Tinf, "nome_algoritmo": nome_algoritmo})
@@ -470,7 +470,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     fig, ax = plt.subplots(1, 3, figsize=(15, 4))
     ax[0].plot(tempo_total, Ts, label="Ts", color="tab:blue", linestyle="solid")
     ax[0].plot(tempo_total, Tt, label="Tt", color="tab:red", linestyle="solid")
-    ax[0].set_title("Setpoint da temperatura de saída (SPTs) e\n temperaturas de saída (Ts) e do tanque (Tt)")
+    ax[0].set_title("Temperaturas de saída (Ts) e do tanque (Tt)")
     ax[0].set_xlabel("Tempo em minutos")
     ax[0].set_ylabel("Temperatura em °C")
     ax[0].legend()
