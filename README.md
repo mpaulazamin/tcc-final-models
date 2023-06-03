@@ -52,7 +52,3 @@ Definida como:
 ```bash
 recompensa = iqb
 ```
-
-### Resultados
-
-TBD
