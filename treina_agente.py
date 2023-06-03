@@ -475,7 +475,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list):
 
     # Tabela com resultados principais:
     resultados = [int(Tinf_var), custo_eletrico_kwh_list[0], iqb_list[0], iqb_list[1], iqb_list[2], iqb_list[3], iqb_list[4], iqb_list[5], iqb_list[6],
-                  sum(iqb_list) / len(iqb_list), custo_eletrico_list_acumulado[-1], custo_gas_list_acumulado[-1], custo_agua_list_acumulado[-1]]
+                  sum(iqb_list) / len(iqb_list), sum(iqb_list), episode_reward, custo_eletrico_list_acumulado[-1], custo_gas_list_acumulado[-1], custo_agua_list_acumulado[-1]]
 
     # Gráficos:
     sns.set_style("darkgrid")
@@ -604,7 +604,7 @@ if __name__ == "__main__":
 
     if args["avalia"] == "True":
         # Tabela com resultados principais:    
-        df = pd.DataFrame(columns=["Temperatura ambiente", "Tarifa da energia elétrica", "IQB 1", "IQB 2", "IQB 3", "IQB 4", "IQB 5", "IQB 6", "IQB 7", "IQB médio", "Custo elétrico total",  "Custo de gás total",  "Custo de água total"])
+        df = pd.DataFrame(columns=["Temperatura ambiente", "Tarifa da energia elétrica", "IQB 1", "IQB 2", "IQB 3", "IQB 4", "IQB 5", "IQB 6", "IQB 7", "IQB médio", "IQB total", "Recompensa total", "Custo elétrico total", "Custo de gás total", "Custo de água total"])
         
         # Cria combinações com todas as temperaturas e tarifa:
         combs = list(itertools.product(map(str, Tinf_list), map(str, custo_eletrico_kwh_list)))
