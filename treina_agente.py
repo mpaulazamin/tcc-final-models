@@ -3,6 +3,7 @@ import ray.rllib.algorithms.ppo as ppo
 import ray.rllib.algorithms.sac as sac
 from ray.rllib.algorithms.algorithm import Algorithm
 
+import argparse
 import random
 import os
 import glob
@@ -412,6 +413,7 @@ def avalia_agente(nome_algoritmo, Tinf):
             # Recompensa total:
             episode_reward += reward
             print(f"Recompensa: {reward}.")
+            print("")
 
             # Para visualização:
             SPTq_list.append(info.get("SPTq"))
@@ -467,12 +469,11 @@ def avalia_agente(nome_algoritmo, Tinf):
 
     # Gráficos:
     sns.set_style("darkgrid")
-    path_imagens = os.getcwd() + "/imagens_tcc/"
+    path_imagens = os.getcwd() + "/imagens_Tinf" + Tinf_var + "/"
 
     fig, ax = plt.subplots(1, 3, figsize=(15, 4))
     ax[0].plot(tempo_total, Ts, label="Ts", color="tab:blue", linestyle="solid")
     ax[0].plot(tempo_total, Tt, label="Tt", color="tab:red", linestyle="solid")
-    ax[0].plot(tempo_total, SPTs, label="SPTs - ação", color="black", linestyle="dashed")
     ax[0].set_title("Setpoint da temperatura de saída (SPTs) e\n temperaturas de saída (Ts) e do tanque (Tt)")
     ax[0].set_xlabel("Tempo em minutos")
     ax[0].set_ylabel("Temperatura em °C")
@@ -555,29 +556,40 @@ def avalia_agente(nome_algoritmo, Tinf):
     ax.legend()
     plt.savefig(path_imagens + "resultado4_" + nome_algoritmo + "_Tinf" + Tinf_var + ".png", dpi=200)
 
-# Inicializa o Ray:
-ray.shutdown()
-ray.init()
 
-# Define variáveis:
-# nome_algoritmo = "proximal_policy_optimization"
-# n_iter_agente = 101
-# n_iter_checkpoints = 10
-# Tinf = 30
+if __name__ == "__main__":
 
-nome_algoritmo = "soft_actor_critic"
-n_iter_agente = 1001
-n_iter_checkpoints = 100
-Tinf = 25
+    # Argumentos:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("nome_algoritmo", help="Nome do algoritmo", choices=("ppo", "sac"))
+    parser.add_argument("Tinf", help="Temperatura ambiente", type=int)
+    parser.add_argument("treina", help="Treina o agente", choices=("True", "False"))
+    parser.add_argument("avalia", help="Avalia o agente", choices=("True", "False"))
+    args = vars(parser.parse_args())
 
-# Treina e avalia o agente:
-treina = False
-avalia = True
+    # Inicializa o Ray:
+    ray.shutdown()
+    ray.init()
 
-if treina:
-    treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf)
-if avalia:
-    avalia_agente(nome_algoritmo, Tinf)
+    # Define o algoritmo:
+    if args["nome_algoritmo"] == "ppo":
+        nome_algoritmo = "proximal_policy_optimization"
+        n_iter_agente = 101
+        n_iter_checkpoints = 10
 
-# Reseta o Ray:
-ray.shutdown()
+    if args["nome_algoritmo"] == "sac":
+        nome_algoritmo = "soft_actor_critic"
+        n_iter_agente = 1001
+        n_iter_checkpoints = 100
+
+    # Define a temperatura ambiente:
+    Tinf = args["Tinf"]
+
+    # Treina e avalia o agente:
+    if args["treina"] == "True":
+        treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, Tinf)
+    if args["avalia"] == "True":
+        avalia_agente(nome_algoritmo, Tinf)
+
+    # Reseta o Ray:
+    ray.shutdown()
