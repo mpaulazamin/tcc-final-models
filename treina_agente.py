@@ -363,7 +363,7 @@ def avalia_agente(nome_algoritmo, Tinf):
     path = path_root + "results_" + nome_algoritmo
 
     # Carrega o agente treinado:
-    agent = Algorithm.from_checkpoint(glob.glob(path +"/*")[-1])
+    agent = Algorithm.from_checkpoint(glob.glob(path +"/*")[-5])
 
     # Constrói o ambiente:
     env = ShowerEnv({"Tinf": Tinf, "nome_algoritmo": nome_algoritmo})
@@ -497,14 +497,14 @@ def avalia_agente(nome_algoritmo, Tinf):
     ax[0, 0].legend()
 
     ax[0, 1].plot(tempo_total, Sa, label="Sa", color="silver", linestyle="solid")
-    ax[0, 1].plot(tempo_total, Sr, label="Sr", color="tab:red", linestyle="solid")
+    ax[0, 1].plot(tempo_total, Sr, label="Sr - ação", color="tab:red", linestyle="solid")
     ax[0, 1].set_title("Frações de aquecimento do boiler (Sa)\n e da resistência elétrica (Sr)")
     # ax[0, 1].set_xlabel("Tempo em minutos")
     ax[0, 1].set_ylabel("Fração")
     ax[0, 1].legend()
 
     ax[1, 0].plot(tempo_total, xs, label="xs - ação", color="black", linestyle="solid")
-    ax[1, 0].plot(tempo_total, xq, label="xq", color="tab:red", linestyle="solid")
+    ax[1, 0].plot(tempo_total, xq, label="xq - ação", color="tab:red", linestyle="solid")
     ax[1, 0].plot(tempo_total, xf, label="xf", color="tab:blue", linestyle="solid")
     ax[1, 0].set_title("Aberturas das válvulas de saída (xs),\n quente (xq) e fria (xf)")
     ax[1, 0].set_xlabel("Tempo em minutos")
