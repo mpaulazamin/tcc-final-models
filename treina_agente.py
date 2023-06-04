@@ -470,9 +470,13 @@ def treina_agente(nome_algoritmo, n_iter_agente, n_iter_checkpoints, concept, se
 
 def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=True):
 
-    # Define o local do checkpoint salvo:
+    # Temperatura ambiente e custo da energia elétrica:
     Tinf_var = str(Tinf_list[0])
     custo_eletrico_kwh_var = str(custo_eletrico_kwh_list[0]).replace(".", "-")
+    Tinf_num = Tinf_list[0]
+    custo_eletrico_kwh_num = custo_eletrico_kwh_list[0]
+
+    # Define o local do checkpoint salvo:
     path_root_models = "/models/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo + "_concept_"
@@ -497,8 +501,23 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
     })
     obs = env.reset()
 
-    # Carrega o selector treinado:
-    agent = Algorithm.from_checkpoint(glob.glob(selector_path +"/*")[-1])
+    # Define se será utilizado o concept selector ou programmed:
+    if selector == True:
+        agent = Algorithm.from_checkpoint(glob.glob(selector_path +"/*")[-1])
+
+    if selector == False:
+        if Tinf_num < 20 and custo_eletrico_kwh_num <= 1.5: 
+            agent = Algorithm.from_checkpoint(glob.glob(banho_dia_frio +"/*")[-1])
+        elif Tinf_num < 20 and custo_eletrico_kwh_num > 1.5: 
+            agent = Algorithm.from_checkpoint(glob.glob(banho_noite_fria +"/*")[-1])
+        elif Tinf_num >= 20 and Tinf_num < 25 and custo_eletrico_kwh_num <= 1.5: 
+            agent = Algorithm.from_checkpoint(glob.glob(banho_dia_ameno +"/*")[-1])
+        elif Tinf_num >= 20 and Tinf_num < 25 and custo_eletrico_kwh_num > 1.5: 
+            agent = Algorithm.from_checkpoint(glob.glob(banho_noite_amena +"/*")[-1])
+        elif Tinf_num >= 25 and custo_eletrico_kwh_num <= 1.5: 
+            agent = Algorithm.from_checkpoint(glob.glob(banho_dia_quente +"/*")[-1])
+        elif Tinf_num >= 25 and custo_eletrico_kwh_num > 1.5: 
+            agent = Algorithm.from_checkpoint(glob.glob(banho_noite_quente +"/*")[-1])
     
     # Para visualização:
     SPTq_list = []
@@ -538,7 +557,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
             # Seleciona ações:
             action = agent.compute_single_action(obs)
             print(f"Iteração: {i}")
-            print(f"Ação (número do concept selecionado): {action}")
+            print(f"Ação: {action}")
             concepts_selecionados.append(action)
 
             # Retorna os estados e a recompensa:
@@ -583,6 +602,9 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
     custo_eletrico_list_acumulado = list(accumulate(custo_eletrico_list))
     custo_gas_list_acumulado = list(accumulate(custo_gas_list))
     custo_agua_list_acumulado = list(accumulate(custo_agua_list))
+    print(f"Custo elétrico total: {custo_eletrico_list_acumulado[-1]}")
+    print(f"Custo de gás total: {custo_gas_list_acumulado[-1]}")
+    print(f"Custo de água total: {custo_agua_list_acumulado[-1]}")
 
     # Para visualização:
     SPTq = np.concatenate(SPTq_list, axis=0)
@@ -760,8 +782,11 @@ if __name__ == "__main__":
             model)
 
     if args["avalia"] == "True":
-        # Define o concept selector como True:
-        selector = True
+        # Define se será utilizado o concept selector ou programmed:
+        if args["selector"] == "True":
+            selector = True
+        else:
+            selector = False
 
         # Tabelas com resultados principais:    
         df_resultados = pd.DataFrame(columns=["Temperatura ambiente", "Tarifa da energia elétrica", "IQB 1", "IQB 2", "IQB 3", "IQB 4", "IQB 5", "IQB 6", "IQB 7", "IQB médio", "IQB total", "Recompensa total", "Custo elétrico total", "Custo de gás total", "Custo de água total"])
@@ -772,14 +797,16 @@ if __name__ == "__main__":
         for j, k in combs:
             Tinf_val = int(j)
             custo_eletrico_kwh_val = float(k)
-
             resultados_list, concepts_list = avalia_agente(nome_algoritmo, [Tinf_val], [custo_eletrico_kwh_val], selector)
             df_resultados.loc[len(df_resultados)] = resultados_list
             df_concepts.loc[len(df_concepts)] = concepts_list
 
         # Salva os resultados principais em um arquivo csv:
-        df_resultados.to_csv("./resultados_tabela/resultados_tabela_Tinf" + str(Tinf_val) + ".csv", index=False)
-        df_concepts.to_csv("./resultados_concepts/resultados_concepts_Tinf" + str(Tinf_val) + ".csv", index=False)
+        if selector:
+            df_resultados.to_csv("./resultados_tabela_selector/resultados_tabela_Tinf" + str(Tinf_val) + ".csv", index=False)
+            df_concepts.to_csv("./resultados_concepts_selector/resultados_concepts_Tinf" + str(Tinf_val) + ".csv", index=False)
+        else:
+            df_resultados.to_csv("./resultados_tabela_programmed/resultados_tabela.csv", index=False)
 
     # Reseta o Ray:
     ray.shutdown()
