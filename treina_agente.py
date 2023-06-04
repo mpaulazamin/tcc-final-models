@@ -472,14 +472,15 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
     path = path_root + "results_" + nome_algoritmo + "_concept_"
 
     banho_dia_frio = path + "banho_dia_frio"
-    banho_noite_fria = path + "banho_noite_fria"
+    # banho_noite_fria = path + "banho_noite_fria"
     banho_dia_ameno = path + "banho_dia_ameno"
-    banho_noite_amena = path + "banho_noite_amena"
+    # banho_noite_amena = path + "banho_noite_amena"
     banho_dia_quente = path + "banho_dia_quente"
-    banho_noite_quente = path + "banho_noite_quente"
+    # banho_noite_quente = path + "banho_noite_quente"
     selector_path = path + "seleciona_banho2"
 
-    model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    # model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    model = [banho_dia_frio, banho_dia_ameno, banho_dia_quente]
 
     # Constrói o ambiente:
     env = ShowerEnv({
