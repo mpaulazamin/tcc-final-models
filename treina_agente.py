@@ -477,7 +477,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
     # banho_noite_amena = path + "banho_noite_amena"
     banho_dia_quente = path + "banho_dia_quente"
     # banho_noite_quente = path + "banho_noite_quente"
-    selector_path = path + "seleciona_banho2"
+    selector_path = path + "seleciona_banho_v2"
 
     # model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
     model = [banho_dia_frio, banho_dia_ameno, banho_dia_quente]
@@ -745,7 +745,7 @@ if __name__ == "__main__":
         selector = treina_agente(nome_algoritmo, 
             n_iter_agente, 
             n_iter_checkpoints,
-            "seleciona_banho2", 
+            "seleciona_banho_v2", 
             True, 
             model)
 
