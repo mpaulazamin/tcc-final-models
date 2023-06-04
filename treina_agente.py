@@ -473,6 +473,7 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
     Tinf_num = Tinf_list[0]
     custo_eletrico_kwh_num = custo_eletrico_kwh_list[0]
 
+    # Define o local do checkpoint salvo:
     path_root_models = "/models/"
     path_root = os.getcwd() + path_root_models
     path = path_root + "results_" + nome_algoritmo + "_concept_"
