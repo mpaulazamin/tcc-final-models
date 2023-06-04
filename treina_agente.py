@@ -738,6 +738,7 @@ if __name__ == "__main__":
     parser.add_argument("nome_algoritmo", help="Nome do algoritmo", choices=("ppo", "sac"))
     parser.add_argument("treina", help="Treina o agente", choices=("True", "False"))
     parser.add_argument("avalia", help="Avalia o agente", choices=("True", "False"))
+    parser.add_argument("selector", help="Avalia o agente", choices=("True", "False"))
     args = vars(parser.parse_args())
 
     # Inicializa o Ray:
@@ -757,10 +758,10 @@ if __name__ == "__main__":
 
     # Define a temperatura ambiente e o custo da energia elétrica:
     # Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
-    Tinf_list = [26]
+    Tinf_list = [30]
     custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
-    # Treina e avalia o agente:
+    # Treina o agente:
     if args["treina"] == "True":
 
         # Treina cada concept:
@@ -781,6 +782,7 @@ if __name__ == "__main__":
             True, 
             model)
 
+    # Avalia o agente:
     if args["avalia"] == "True":
         # Define se será utilizado o concept selector ou programmed:
         if args["selector"] == "True":
