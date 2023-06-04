@@ -726,10 +726,8 @@ if __name__ == "__main__":
         n_iter_checkpoints = 100
 
     # Define a temperatura ambiente e o custo da energia elétrica:
-    # Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
-    # custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
-    Tinf_list = [15, 16]
-    custo_eletrico_kwh_list = [1]
+    Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+    custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
     # Treina e avalia o agente:
     if args["treina"] == "True":
