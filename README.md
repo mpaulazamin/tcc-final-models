@@ -2,7 +2,7 @@
 
 Modelo com malha de inventário para o nível do tanque e com controle liga-desliga do boiler. Com malha cascata, sem split-range.
 
-![image](https://github.com/mpaulazamin/tcc-final-models/blob/multi_agent_camada_rto_iqb_sem_split_range/imagens/chuveiro_controle_t4a_sem_split.jpg)
+![image](https://github.com/mpaulazamin/tcc-final-models/blob/multi_agent_camada_rto_iqb_sem_split_range/imagens_iniciais/chuveiro_controle_t4a_sem_split.jpg)
 
 ### Espaço de ações
 
@@ -89,4 +89,3 @@ recompensa = iqb
 ### Resultados
 
 - Havia rodado o selector com 6 concepts, mas nesse caso não faz sentido pois o custo da energia elétrica não é otimizado. Logo, estou rodando novamente o concept `seleciona_banho_v2` com somente 3 concepts (`banho_dia_frio`, `banho_dia_ameno`, `banho_dia_quente`).
-- Talvez eu precise renomear os concepts para algo como `banho_temperatura_fria_energia_barata`.
