@@ -89,7 +89,3 @@ Definida como:
 ```bash
 recompensa = 5 * iqb - 2 * custo_eletrico - custo_gas - custo_agua
 ```
-
-### Resultados
-
-TBD
