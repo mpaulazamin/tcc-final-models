@@ -2,7 +2,7 @@
 
 Modelo com malha de inventário para o nível do tanque e com controle liga-desliga do boiler. Com malha cascata, sem split-range.
 
-![image](https://github.com/mpaulazamin/tcc-final-models/blob/single_concept_camada_rto_sem_split_range_multiple_scenarios/imagens/chuveiro_controle_t4a_sem_split.jpg)
+![image](https://github.com/mpaulazamin/tcc-final-models/blob/single_concept_camada_rto_sem_split_range_multiple_scenarios/imagens_iniciais/chuveiro_controle_t4a_sem_split.jpg)
 
 ### Espaço de ações
 
