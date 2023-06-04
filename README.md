@@ -2,7 +2,7 @@
 
 Modelo com malha de inventário para o nível do tanque e com controle liga-desliga do boiler. Com malha cascata, com split-range.
 
-![image](https://github.com/mpaulazamin/tcc-final-models/blob/multi_agent_camada_rto_com_split_range/imagens/chuveiro_controle_t4a.jpg)
+![image](https://github.com/mpaulazamin/tcc-final-models/blob/multi_agent_camada_rto_com_split_range/imagens_iniciais/chuveiro_controle_t4a.jpg)
 
 ### Espaço de ações
 
@@ -89,7 +89,3 @@ Definida como:
 ```bash
 recompensa = 5 * iqb - 2 * custo_eletrico - custo_gas - custo_agua
 ```
-
-### Resultados
-
-TBD
