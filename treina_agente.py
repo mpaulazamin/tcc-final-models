@@ -480,14 +480,15 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
     path = path_root + "results_" + nome_algoritmo + "_concept_"
 
     banho_dia_frio = path + "banho_dia_frio"
-    banho_noite_fria = path + "banho_noite_fria"
+    # banho_noite_fria = path + "banho_noite_fria"
     banho_dia_ameno = path + "banho_dia_ameno"
-    banho_noite_amena = path + "banho_noite_amena"
+    # banho_noite_amena = path + "banho_noite_amena"
     banho_dia_quente = path + "banho_dia_quente"
-    banho_noite_quente = path + "banho_noite_quente"
+    # banho_noite_quente = path + "banho_noite_quente"
     selector_path = path + "seleciona_banho_v2"
 
-    model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    # model = [banho_dia_frio, banho_noite_fria, banho_dia_ameno, banho_noite_amena, banho_dia_quente, banho_noite_quente]
+    model = [banho_dia_frio, banho_dia_ameno, banho_dia_quente]
 
     # Constrói o ambiente:
     env = ShowerEnv({
@@ -504,18 +505,12 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
         agent = Algorithm.from_checkpoint(glob.glob(selector_path +"/*")[-1])
 
     if selector == False:
-        if Tinf_num < 20 and custo_eletrico_kwh_num <= 1.5: 
+        if Tinf_num < 20: 
             agent = Algorithm.from_checkpoint(glob.glob(banho_dia_frio +"/*")[-1])
-        elif Tinf_num < 20 and custo_eletrico_kwh_num > 1.5: 
-            agent = Algorithm.from_checkpoint(glob.glob(banho_noite_fria +"/*")[-1])
-        elif Tinf_num >= 20 and Tinf_num < 25 and custo_eletrico_kwh_num <= 1.5: 
+        elif Tinf_num >= 20 and Tinf_num < 25: 
             agent = Algorithm.from_checkpoint(glob.glob(banho_dia_ameno +"/*")[-1])
-        elif Tinf_num >= 20 and Tinf_num < 25 and custo_eletrico_kwh_num > 1.5: 
-            agent = Algorithm.from_checkpoint(glob.glob(banho_noite_amena +"/*")[-1])
-        elif Tinf_num >= 25 and custo_eletrico_kwh_num <= 1.5: 
+        elif Tinf_num >= 25: 
             agent = Algorithm.from_checkpoint(glob.glob(banho_dia_quente +"/*")[-1])
-        elif Tinf_num >= 25 and custo_eletrico_kwh_num > 1.5: 
-            agent = Algorithm.from_checkpoint(glob.glob(banho_noite_quente +"/*")[-1])
     
     # Para visualização:
     SPTq_list = []
@@ -728,6 +723,7 @@ if __name__ == "__main__":
     parser.add_argument("nome_algoritmo", help="Nome do algoritmo", choices=("ppo", "sac"))
     parser.add_argument("treina", help="Treina o agente", choices=("True", "False"))
     parser.add_argument("avalia", help="Avalia o agente", choices=("True", "False"))
+    parser.add_argument("selector", help="Avalia o agente", choices=("True", "False"))
     args = vars(parser.parse_args())
 
     # Inicializa o Ray:
@@ -746,7 +742,8 @@ if __name__ == "__main__":
         n_iter_checkpoints = 100
 
     # Define a temperatura ambiente e o custo da energia elétrica:
-    Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+    # Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+    Tinf_list = [15]
     custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
     # Treina o agente:
