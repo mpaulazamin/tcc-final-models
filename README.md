@@ -1,4 +1,4 @@
-# Modelos treinados para o TCC
+# Modelos de RL treinados com os algoritmos PPO e SAC
 
 ## Instalação
 
