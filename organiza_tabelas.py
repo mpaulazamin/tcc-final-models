@@ -8,8 +8,8 @@ def organiza_tabelas(path):
     df = pd.concat(df_list, ignore_index=True)
     df.to_csv(path + "/tabela_final.csv", index=False)
 
-path1 = "./resultados_tabela_selector"
+path1 = "./resultados_tabela_selector_v2"
 organiza_tabelas(path1)
 
-path2 = "./resultados_concepts_selector"
+path2 = "./resultados_concepts_selector_v2"
 organiza_tabelas(path2)
