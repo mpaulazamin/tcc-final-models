@@ -53,7 +53,7 @@ class ShowerEnv(gym.Env):
         self.potencia_aquecedor = 29000
 
         # Custo do kg do gás e do m3 da água:
-        self.custo_gas_kg = 2
+        self.custo_gas_kg = 3
         self.custo_agua_m3 = 4
 
         # Concept selector seleciona qual concept treinado será utilizado:
@@ -632,101 +632,101 @@ def avalia_agente(nome_algoritmo, Tinf_list, custo_eletrico_kwh_list, selector=T
                     concepts_selecionados[4], concepts_selecionados[5], concepts_selecionados[6]]
 
     # Gráficos:
-    sns.set_style("darkgrid")
-    path_imagens = os.getcwd() + "/imagens/"
+    # sns.set_style("darkgrid")
+    # path_imagens = os.getcwd() + "/imagens/"
 
-    fig, ax = plt.subplots(1, 3, figsize=(15, 4))
-    ax[0].plot(tempo_total, Ts, label="Ts", color="tab:blue", linestyle="solid")
-    ax[0].plot(tempo_total, Tt, label="Tt", color="tab:red", linestyle="solid")
-    ax[0].plot(tempo_total, SPTs, label="SPTs - ação", color="black", linestyle="dashed")
-    ax[0].set_title("Setpoint da temperatura de saída (SPTs) e\n temperaturas de saída (Ts) e do tanque (Tt)")
-    ax[0].set_xlabel("Tempo em minutos")
-    ax[0].set_ylabel("Temperatura em °C")
-    ax[0].legend()
+    # fig, ax = plt.subplots(1, 3, figsize=(15, 4))
+    # ax[0].plot(tempo_total, Ts, label="Ts", color="tab:blue", linestyle="solid")
+    # ax[0].plot(tempo_total, Tt, label="Tt", color="tab:red", linestyle="solid")
+    # ax[0].plot(tempo_total, SPTs, label="SPTs - ação", color="black", linestyle="dashed")
+    # ax[0].set_title("Setpoint da temperatura de saída (SPTs) e\n temperaturas de saída (Ts) e do tanque (Tt)")
+    # ax[0].set_xlabel("Tempo em minutos")
+    # ax[0].set_ylabel("Temperatura em °C")
+    # ax[0].legend()
 
-    ax[1].plot(tempo_total, Fs, label="Fs", color="tab:red", linestyle="solid")
-    ax[1].set_title("Vazão de saída (Fs)")
-    ax[1].set_xlabel("Tempo em minutos")
-    ax[1].set_ylabel("Vazão em litros/minutos")
-    ax[1].legend()
+    # ax[1].plot(tempo_total, Fs, label="Fs", color="tab:red", linestyle="solid")
+    # ax[1].set_title("Vazão de saída (Fs)")
+    # ax[1].set_xlabel("Tempo em minutos")
+    # ax[1].set_ylabel("Vazão em litros/minutos")
+    # ax[1].legend()
 
-    ax[2].plot(tempo_acoes, iqb_list, label="IQB", color="black", linestyle="solid")
-    ax[2].set_title("Índice de qualidade do banho (IQB)")
-    ax[2].set_xlabel("Ação")
-    ax[2].set_ylabel("Índice")
-    ax[2].legend()
-    plt.savefig(path_imagens + "resultado1_" + nome_algoritmo + "_Tinf" + Tinf_var + "_tarifa" + custo_eletrico_kwh_var + "_selector_" + str(selector) + ".png", dpi=200)
-    plt.cla()
-    plt.close(fig)
+    # ax[2].plot(tempo_acoes, iqb_list, label="IQB", color="black", linestyle="solid")
+    # ax[2].set_title("Índice de qualidade do banho (IQB)")
+    # ax[2].set_xlabel("Ação")
+    # ax[2].set_ylabel("Índice")
+    # ax[2].legend()
+    # plt.savefig(path_imagens + "resultado1_" + nome_algoritmo + "_Tinf" + Tinf_var + "_tarifa" + custo_eletrico_kwh_var + "_selector_" + str(selector) + ".png", dpi=200)
+    # plt.cla()
+    # plt.close(fig)
 
-    fig, ax = plt.subplots(2, 2, figsize=(15, 11))
-    ax[0, 0].plot(tempo_total, Tq, label="Tq", color="tab:orange", linestyle="solid")
-    ax[0, 0].plot(tempo_total, SPTq, label="SPTq - ação", color="black", linestyle="dashed")
-    ax[0, 0].set_title("Setpoint da temperatura do boiler (SPTq)\n e temperatura do boiler (Tq)")
-    # ax[0, 0].set_xlabel("Tempo em minutos")
-    ax[0, 0].set_ylabel("Temperatura °C")
-    ax[0, 0].legend()
+    # fig, ax = plt.subplots(2, 2, figsize=(15, 11))
+    # ax[0, 0].plot(tempo_total, Tq, label="Tq", color="tab:orange", linestyle="solid")
+    # ax[0, 0].plot(tempo_total, SPTq, label="SPTq - ação", color="black", linestyle="dashed")
+    # ax[0, 0].set_title("Setpoint da temperatura do boiler (SPTq)\n e temperatura do boiler (Tq)")
+    # # ax[0, 0].set_xlabel("Tempo em minutos")
+    # ax[0, 0].set_ylabel("Temperatura °C")
+    # ax[0, 0].legend()
 
-    ax[0, 1].plot(tempo_total, Sa, label="Sa", color="silver", linestyle="solid")
-    ax[0, 1].plot(tempo_total, Sr, label="Sr - ação", color="tab:red", linestyle="solid")
-    ax[0, 1].set_title("Frações de aquecimento do boiler (Sa)\n e da resistência elétrica (Sr)")
-    # ax[0, 1].set_xlabel("Tempo em minutos")
-    ax[0, 1].set_ylabel("Fração")
-    ax[0, 1].legend()
+    # ax[0, 1].plot(tempo_total, Sa, label="Sa", color="silver", linestyle="solid")
+    # ax[0, 1].plot(tempo_total, Sr, label="Sr - ação", color="tab:red", linestyle="solid")
+    # ax[0, 1].set_title("Frações de aquecimento do boiler (Sa)\n e da resistência elétrica (Sr)")
+    # # ax[0, 1].set_xlabel("Tempo em minutos")
+    # ax[0, 1].set_ylabel("Fração")
+    # ax[0, 1].legend()
 
-    ax[1, 0].plot(tempo_total, xs, label="xs - ação", color="black", linestyle="solid")
-    ax[1, 0].plot(tempo_total, xq, label="xq", color="tab:red", linestyle="solid")
-    ax[1, 0].plot(tempo_total, xf, label="xf", color="tab:blue", linestyle="solid")
-    ax[1, 0].set_title("Aberturas das válvulas de saída (xs),\n quente (xq) e fria (xf)")
-    ax[1, 0].set_xlabel("Tempo em minutos")
-    ax[1, 0].set_ylabel("Abertura")
-    ax[1, 0].legend()
+    # ax[1, 0].plot(tempo_total, xs, label="xs - ação", color="black", linestyle="solid")
+    # ax[1, 0].plot(tempo_total, xq, label="xq", color="tab:red", linestyle="solid")
+    # ax[1, 0].plot(tempo_total, xf, label="xf", color="tab:blue", linestyle="solid")
+    # ax[1, 0].set_title("Aberturas das válvulas de saída (xs),\n quente (xq) e fria (xf)")
+    # ax[1, 0].set_xlabel("Tempo em minutos")
+    # ax[1, 0].set_ylabel("Abertura")
+    # ax[1, 0].legend()
 
-    ax[1, 1].plot(tempo_total, SPh, label="SPh", color="black", linestyle="dashed")
-    ax[1, 1].plot(tempo_total, h, label="h", color="tab:red", linestyle="solid")
-    ax[1, 1].set_title("Setpoint do nível do tanque (SPh) e nível do tanque (h)")
-    ax[1, 1].set_xlabel("Tempo em minutos")
-    ax[1, 1].set_ylabel("Nível")
-    ax[1, 1].legend()
-    plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + "_Tinf" + Tinf_var + "_tarifa" + custo_eletrico_kwh_var + "_selector_" + str(selector) + ".png", dpi=200)
-    plt.cla()
-    plt.close(fig)
+    # ax[1, 1].plot(tempo_total, SPh, label="SPh", color="black", linestyle="dashed")
+    # ax[1, 1].plot(tempo_total, h, label="h", color="tab:red", linestyle="solid")
+    # ax[1, 1].set_title("Setpoint do nível do tanque (SPh) e nível do tanque (h)")
+    # ax[1, 1].set_xlabel("Tempo em minutos")
+    # ax[1, 1].set_ylabel("Nível")
+    # ax[1, 1].legend()
+    # plt.savefig(path_imagens + "resultado2_" + nome_algoritmo + "_Tinf" + Tinf_var + "_tarifa" + custo_eletrico_kwh_var + "_selector_" + str(selector) + ".png", dpi=200)
+    # plt.cla()
+    # plt.close(fig)
 
-    fig, ax = plt.subplots(1, 3, figsize=(20, 4))
-    ax[0].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
-    ax[0].set_title("Recompensa do agente")
-    ax[0].set_xlabel("Ação")
-    ax[0].set_ylabel("Índice")
-    ax[0].legend()
+    # fig, ax = plt.subplots(1, 3, figsize=(20, 4))
+    # ax[0].plot(tempo_acoes, recompensa_list, label="Recompensa", color="black", linestyle="solid")
+    # ax[0].set_title("Recompensa do agente")
+    # ax[0].set_xlabel("Ação")
+    # ax[0].set_ylabel("Índice")
+    # ax[0].legend()
 
-    ax[1].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="tab:blue", linestyle="solid")
-    ax[1].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="tab:red", linestyle="solid")
-    ax[1].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="tab:orange", linestyle="solid")
-    ax[1].set_title("Custos do banho em cada ação")
-    ax[1].set_xlabel("Ação")
-    ax[1].set_ylabel("Custos em reais")
-    ax[1].legend()
+    # ax[1].plot(tempo_acoes, custo_eletrico_list, label="Custo elétrico", color="tab:blue", linestyle="solid")
+    # ax[1].plot(tempo_acoes, custo_gas_list, label="Custo do gás", color="tab:red", linestyle="solid")
+    # ax[1].plot(tempo_acoes, custo_agua_list, label="Custo da água", color="tab:orange", linestyle="solid")
+    # ax[1].set_title("Custos do banho em cada ação")
+    # ax[1].set_xlabel("Ação")
+    # ax[1].set_ylabel("Custos em reais")
+    # ax[1].legend()
 
-    ax[2].plot(tempo_acoes, custo_eletrico_list_acumulado, label="Custo elétrico", color="tab:blue", linestyle="solid")
-    ax[2].plot(tempo_acoes, custo_gas_list_acumulado, label="Custo do gás", color="tab:red", linestyle="solid")
-    ax[2].plot(tempo_acoes, custo_agua_list_acumulado, label="Custo da água", color="tab:orange", linestyle="solid")
-    ax[2].set_title("Custos cumulativos do banho")
-    ax[2].set_xlabel("Ação")
-    ax[2].set_ylabel("Custos em reais")
-    ax[2].legend()
-    plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + "_Tinf" + Tinf_var + "_tarifa" + custo_eletrico_kwh_var + "_selector_" + str(selector) + ".png", dpi=200)
-    plt.cla()
-    plt.close(fig)
+    # ax[2].plot(tempo_acoes, custo_eletrico_list_acumulado, label="Custo elétrico", color="tab:blue", linestyle="solid")
+    # ax[2].plot(tempo_acoes, custo_gas_list_acumulado, label="Custo do gás", color="tab:red", linestyle="solid")
+    # ax[2].plot(tempo_acoes, custo_agua_list_acumulado, label="Custo da água", color="tab:orange", linestyle="solid")
+    # ax[2].set_title("Custos cumulativos do banho")
+    # ax[2].set_xlabel("Ação")
+    # ax[2].set_ylabel("Custos em reais")
+    # ax[2].legend()
+    # plt.savefig(path_imagens + "resultado3_" + nome_algoritmo + "_Tinf" + Tinf_var + "_tarifa" + custo_eletrico_kwh_var + "_selector_" + str(selector) + ".png", dpi=200)
+    # plt.cla()
+    # plt.close(fig)
 
-    fig, ax = plt.subplots(1, 1, figsize=(5, 4))
-    ax.plot(tempo_acoes, iqb_list, label="IQB", color="black", linestyle="solid")
-    ax.set_title("Índice de qualidade do banho (IQB)")
-    ax.set_xlabel("Ação")
-    ax.set_ylabel("Índice")
-    ax.legend()
-    plt.savefig(path_imagens + "resultado4_" + nome_algoritmo + "_Tinf" + Tinf_var + "_tarifa" + custo_eletrico_kwh_var + "_selector_" + str(selector) + ".png", dpi=200)
-    plt.cla()
-    plt.close(fig)
+    # fig, ax = plt.subplots(1, 1, figsize=(5, 4))
+    # ax.plot(tempo_acoes, iqb_list, label="IQB", color="black", linestyle="solid")
+    # ax.set_title("Índice de qualidade do banho (IQB)")
+    # ax.set_xlabel("Ação")
+    # ax.set_ylabel("Índice")
+    # ax.legend()
+    # plt.savefig(path_imagens + "resultado4_" + nome_algoritmo + "_Tinf" + Tinf_var + "_tarifa" + custo_eletrico_kwh_var + "_selector_" + str(selector) + ".png", dpi=200)
+    # plt.cla()
+    # plt.close(fig)
 
     return resultados_list, concepts_list
 
@@ -760,7 +760,7 @@ if __name__ == "__main__":
     # Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
     # custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
     Tinf_list = [24]
-    custo_eletrico_kwh_list = [2.25]
+    custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
     # Treina o agente:
     if args["treina"] == "True":
@@ -806,10 +806,10 @@ if __name__ == "__main__":
 
         # Salva os resultados principais em um arquivo csv:
         if selector:
-            df_resultados.to_csv("./resultados_tabela_selector/resultados_tabela_Tinf" + str(Tinf_val) + ".csv", index=False)
-            df_concepts.to_csv("./resultados_concepts_selector/resultados_concepts_Tinf" + str(Tinf_val) + ".csv", index=False)
+            df_resultados.to_csv("./resultados_tabela_selector_v2/resultados_tabela_Tinf" + str(Tinf_val) + ".csv", index=False)
+            df_concepts.to_csv("./resultados_concepts_selector_v2/resultados_concepts_Tinf" + str(Tinf_val) + ".csv", index=False)
         else:
-            df_resultados.to_csv("./resultados_tabela_programmed/resultados_tabela.csv", index=False)
+            df_resultados.to_csv("./resultados_tabela_programmed_v2/resultados_tabela.csv", index=False)
 
     # Reseta o Ray:
     ray.shutdown()
