@@ -883,8 +883,8 @@ if __name__ == "__main__":
         # else:
         #     df_resultados.to_csv("./resultados_tabela_programmed_v2/resultados_tabela.csv", index=False)
         if selector:
-            df_resultados.to_csv("./validação/resultados_learned_tabela_Tinf" + str(Tinf_val) + ".csv", index=False)
-            df_concepts.to_csv("./resultados_learned_concepts_Tinf" + str(Tinf_val) + ".csv", index=False)
+            df_resultados.to_csv("./validação/resultados_learned_tabela_Tinf" + str(Tinf_val).replace(".", "-") + ".csv", index=False)
+            df_concepts.to_csv("./resultados_learned_concepts_Tinf" + str(Tinf_val).replace(".", "-") + ".csv", index=False)
         else:
             df_resultados.to_csv("./validação/resultados_programmed_tabela.csv", index=False)
 
