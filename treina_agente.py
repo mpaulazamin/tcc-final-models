@@ -788,10 +788,8 @@ if __name__ == "__main__":
         n_iter_checkpoints = 100
 
     # Define a temperatura ambiente e o custo da energia elétrica:
-    # Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
-    # custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
-    Tinf_list = [15.5]
-    custo_eletrico_kwh_list = [2.1]
+    Tinf_list = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+    custo_eletrico_kwh_list = [1, 1.25, 1.5, 1.75, 2, 2.25]
 
     # Treina o agente:
     if args["treina"] == "True":
@@ -867,14 +865,9 @@ if __name__ == "__main__":
             df_concepts.loc[len(df_concepts)] = concepts_list
 
         # Salva os resultados principais em um arquivo csv:
-        # if selector:
-        #     df_resultados.to_csv("./resultados_tabela_selector/resultados_tabela_Tinf" + str(Tinf_val) + ".csv", index=False)
-        #     df_concepts.to_csv("./resultados_concepts_selector/resultados_concepts_Tinf" + str(Tinf_val) + ".csv", index=False)
-        # else:
-        #     df_resultados.to_csv("./resultados_tabela_programmed/resultados_tabela.csv", index=False)
         if selector:
-            df_resultados.to_csv("./validação/resultados_tabela_Tinf" + str(Tinf_val).replace(".", "-") + ".csv", index=False)
-            df_concepts.to_csv("./validação/resultados_concepts_Tinf" + str(Tinf_val).replace(".", "-") + ".csv", index=False)
+            df_resultados.to_csv("./resultados_tabela_selector/resultados_tabela_Tinf" + str(Tinf_val) + ".csv", index=False)
+            df_concepts.to_csv("./resultados_concepts_selector/resultados_concepts_Tinf" + str(Tinf_val) + ".csv", index=False)
         else:
             df_resultados.to_csv("./resultados_tabela_programmed/resultados_tabela.csv", index=False)
 
