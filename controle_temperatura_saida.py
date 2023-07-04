@@ -24,11 +24,7 @@ def controle_pid(SP, PV, j, I_buffer, D_buffer, dt, Kp, Ti, Td, b, c, N, UU_bias
         UU_min (float): Valor mínimo que a variável pode atingir.
         UU_max (float): Valor máximo que a variável pode atingir.
         metodo (string): Método para resolver o controlador PID. As opções são: Backward, Forward, Tustin e Ramp.
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> b19006f4216533a6b502623511ac14de71b58a3c
     Retorna:
         numpy.array(): Array do numpy contendo o valor de saída do PID e os parâmetros calculados.
     """
@@ -402,11 +398,7 @@ def calculo_iqb(Ts, Fs):
 def custo_eletrico_banho(Sr, potencia_eletrica, custo_eletrico_kwh, dt):
     """Calcula o custo da parte elétrica do banho.
 
-<<<<<<< HEAD
-    O custo da parte elétrica do banho é dado pela potência do chuveiro em KW multiplicado pela fração de utilização
-=======
     O custo da parte elétrica do banho é dado pela potência do chuveiro em kW multiplicado pela fração de utilização
->>>>>>> b19006f4216533a6b502623511ac14de71b58a3c
     da resistência elétrica Sr, o custo do kWh em reais, e o tempo do banho em horas. Como o tempo é em minutos, 
     divide-se por 60. Como a estratégia de controle utilizada foi split-range para Sr, o valor considerado no cálculo
     para Sr será a área da curva (integral).
@@ -416,11 +408,7 @@ def custo_eletrico_banho(Sr, potencia_eletrica, custo_eletrico_kwh, dt):
         potencial_eletrica (float): Potência elétrica do tanque de aquecimento (chuveiro) em kW.
         custo_eletrico_kwh (float): Custo do kWh da energia em reais por hora.
         dt (float): Passo de tempo.
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> b19006f4216533a6b502623511ac14de71b58a3c
     Retorna:
         custo_eletrico_total (float): Custo da energia elétrica do banho em reais.
     """
@@ -432,21 +420,12 @@ def custo_eletrico_banho(Sr, potencia_eletrica, custo_eletrico_kwh, dt):
 def custo_gas_banho(Sa, potencia_aquecedor, custo_gas_kg, dt):
     """Calcula o custo do gás do banho.
 
-<<<<<<< HEAD
-    A potência de um aquecedor a gás é dada em kcal/h. Considerando um rendimento de 86%, a potência últi será
-    a potência multiplicada pelo rendimento. Para saber quantas kcal são fornecidas durante o banho, multiplica-se
-    a potência útil pela quantidade de energia gasta de Sa (área da curva) e divide por 60 para tempo em horas.
-    O pode calorífico do gás GLP é de 11750 kcal/kg. Se multiplicarmos esse valor pela quantidade de kcal gasta no banho,
-    é possível obter a quantidade de gás em kg gasta no banho. Finalmente, o custo em reais é dado pela quantidade de gás em kg
-    multiplicada pelo custo do gás em kg/reais.
-=======
     Para calcular o custo do gás do banho, encontra-se a quantidade de Sa utilizado para o aquecimento através da
     área da curva (integral). A potência útil do aquecedor é definida como a potência do aquecedor multiplicada
     pelo rendimento, que no caso será 1 pois o modelo do boiler não considera troca de calor com o ambiente.
     Em seguida, multiplica-se a potência útil pela quantidade de Sa utilizada durante o tempo convertido em horas.
     A quantidade de gás em kg gasta no banho será esse valor dividido pelo poder calorífico do gás. Finalmente, o valor
     gasto em reais é o custo do gás em kg/reais multiplicado pela quantidade de gás em kg gasta no banho.
->>>>>>> b19006f4216533a6b502623511ac14de71b58a3c
     
     Referências: 
         https://conteudos.rinnai.com.br/vazao-aquecedor-de-agua-a-gas/#:~:text=A%20pot%C3%AAncia%20do%20aquecedor%20%C3%A9,hora%20(kcal%2Fh)
@@ -456,12 +435,8 @@ def custo_gas_banho(Sa, potencia_aquecedor, custo_gas_kg, dt):
         Sa (float): Seletor do aquecimento do boiler.
         potencial_aquecedor (float): Potência do aquecedor (boiler) em kcal/h.
         custo_gas_kg (float): Custo do kg do gás em reais por kg.
-<<<<<<< HEAD
         tempo (float): Tempo da ação em minutos.
         df (float): Passo de tempo da simulação.
-=======
-        dt (float): Passo de tempo.
->>>>>>> b19006f4216533a6b502623511ac14de71b58a3c
 
     Retorna:
         custo_gas_total (float): Custo do gás do banho em reais.
@@ -499,11 +474,7 @@ def custo_agua_banho(Fs, custo_agua_m3, tempo):
         xs (float): Vazão da válvula de saída.
         custo_agua_m3 (float): Custo da água em m3 por reais. 
         tempo (float): Tempo da ação em minutos.
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> b19006f4216533a6b502623511ac14de71b58a3c
     Retorna:
         custo_agua_total: Custo da água do banho em reais.
     """
