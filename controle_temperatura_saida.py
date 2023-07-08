@@ -11,7 +11,7 @@ def controle_pid(SP, PV, j, I_buffer, D_buffer, dt, Kp, Ti, Td, b, c, N, UU_bias
         PV (float): Valor da variável medida.
         j (int): Buffer para armazenar o passo de tempo contado em números inteiros.
         I_buffer: Buffer para armazenar os valores da ação integral.
-        D_buffer: Buffer para armazenar os valores da ação proporcional.
+        D_buffer: Buffer para armazenar os valores da ação derivativa.
         dt (float): Passo de tempo.
         Kp (float): Ganho proporcional do controlador.
         Ti (float): Ganho integral do controlador.
